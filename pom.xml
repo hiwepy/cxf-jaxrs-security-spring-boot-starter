@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.9.RELEASE</version>
+		<version>1.5.10.RELEASE</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 
@@ -37,6 +37,7 @@
 		<cxf.version>3.2.2</cxf.version>
 		<cxf-starter.version>3.2.2</cxf-starter.version>
 		<jaxb.version>2.2.11</jaxb.version>
+		<javassist.version>3.22.0-GA</javassist.version>
 	</properties>
 
 	<dependencies>
