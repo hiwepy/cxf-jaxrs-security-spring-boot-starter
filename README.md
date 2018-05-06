@@ -1,4 +1,4 @@
-# spring-boot-starter-cxf
+# spring-boot-starter-cxf-jaxrs-plus
 
 
 ### 说明
@@ -12,7 +12,7 @@
 ``` xml
 <dependency>
 	<groupId>${project.groupId}</groupId>
-	<artifactId>spring-boot-starter-cxf</artifactId>
+	<artifactId>spring-boot-starter-cxf-jaxrs-plus</artifactId>
 	<version>${project.version}</version>
 </dependency>
 ```
