@@ -95,7 +95,7 @@ public class CxfJaxrsAutoConfiguration implements ApplicationContextAware {
 		sf.setInInterceptors(Arrays.<Interceptor<? extends Message>>asList(validationInInterceptor));
 		sf.setOutInterceptors(Arrays.<Interceptor<? extends Message>>asList(validationOutInterceptor));
 		sf.create();
-
+		
 		return endpoint.create();
 	}
 

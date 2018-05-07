@@ -476,6 +476,25 @@
 			<artifactId>jaxb-impl</artifactId>
 			<version>${jaxb.version}</version>
 		</dependency>
+		<!-- cxf-validator -->
+		<dependency>
+		    <groupId>org.hibernate</groupId>
+		    <artifactId>hibernate-validator</artifactId>
+		    <version>6.0.9.Final</version>
+		</dependency>
+		<dependency>
+		    <groupId>javax.validation</groupId>
+		    <artifactId>validation-api</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>javax.el</groupId>
+		    <artifactId>javax.el-api</artifactId>
+		    <version>3.0.1-b04</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.glassfish</groupId>
+		    <artifactId>javax.el</artifactId>
+		</dependency>
         <!-- cxf-rt-rs -->
 		<dependency>
 		    <groupId>org.apache.cxf</groupId>
@@ -575,6 +594,12 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-rt-rs-security-oauth2-saml</artifactId>
+			<version>${cxf.version}</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
 			<artifactId>cxf-rt-rs-security-sso-saml</artifactId>
 			<version>${cxf.version}</version>
 			<optional>true</optional>
@@ -606,6 +631,19 @@
 		    <groupId>org.apache.cxf</groupId>
 		    <artifactId>cxf-rt-features-logging</artifactId>
 		    <version>${cxf.version}</version>
+		    <scope>test</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.ftpserver/ftplet-api -->
+		<dependency>
+		    <groupId>org.apache.ftpserver</groupId>
+		    <artifactId>ftplet-api</artifactId>
+		    <version>1.1.1</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.ftpserver/ftpserver-core -->
+		<dependency>
+		    <groupId>org.apache.ftpserver</groupId>
+		    <artifactId>ftpserver-core</artifactId>
+		    <version>1.1.1</version>
 		    <scope>test</scope>
 		</dependency>
 
