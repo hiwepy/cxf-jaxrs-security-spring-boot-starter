@@ -27,7 +27,7 @@ public class ServerPublish {
 		factoryBean.getInInterceptors().add(new LoggingInInterceptor());
 		factoryBean.getOutInterceptors().add(new LoggingOutInterceptor());
 
-		factoryBean.setResourceClasses(CustomerServiceImpl.class);
+		factoryBean.setResourceClasses(CustomerServiceImpl.class, CustomerServiceImpl3.class);
 
 		factoryBean.setAddress("http://localhost:9000/ws/jaxrs");
 		factoryBean.create();

@@ -8,6 +8,8 @@ import java.util.Map;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebParam.Mode;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.jws.WebResult;
 import javax.jws.WebService;
 
@@ -23,6 +25,7 @@ import javassist.CtClass;
 import javassist.CtConstructor;
 import javassist.CtField;
 import javassist.CtMethod;
+import javassist.CtNewMethod;
 import javassist.Modifier;
 import javassist.NotFoundException;
 import javassist.bytecode.AnnotationsAttribute;
@@ -30,6 +33,7 @@ import javassist.bytecode.ClassFile;
 import javassist.bytecode.ConstPool;
 import javassist.bytecode.ParameterAnnotationsAttribute;
 import javassist.bytecode.annotation.Annotation;
+import javassist.bytecode.annotation.ArrayMemberValue;
 import javassist.bytecode.annotation.BooleanMemberValue;
 import javassist.bytecode.annotation.EnumMemberValue;
 import javassist.bytecode.annotation.StringMemberValue;
@@ -37,10 +41,11 @@ import javassist.bytecode.annotation.StringMemberValue;
 /**
  * 
  * 动态构建ws接口
- * @see http://www.cnblogs.com/sunfie/p/5154246.html
- * @see http://blog.csdn.net/youaremoon/article/details/50766972
- * @see https://my.oschina.net/GameKing/blog/794580
- * @see http://wsmajunfeng.iteye.com/blog/1912983
+ * <p>http://www.cnblogs.com/sunfie/p/5154246.html</p>
+ * <p>http://blog.csdn.net/youaremoon/article/details/50766972</p>
+ * <p>https://blog.csdn.net/tscyds/article/details/78415172</p>
+ * <p>https://my.oschina.net/GameKing/blog/794580</p>
+ * <p>http://wsmajunfeng.iteye.com/blog/1912983</p>
  */
 public class EndpointApiCtClassBuilder implements Builder<CtClass> {
 	
@@ -59,17 +64,12 @@ public class EndpointApiCtClassBuilder implements Builder<CtClass> {
 		this.pool = pool;
 		this.ctclass = this.pool.getOrNull(classname);
 		if( null == this.ctclass) {
-			this.ctclass = this.pool.makeClass(classname);
+			this.ctclass = this.pool.makeInterface(classname);
 		}
 		
-		/* 获得 JaxwsHandler 类作为动态类的父类 */
-		CtClass superclass = pool.get(EndpointApi.class.getName());
+		/* 指定 Cloneable 作为动态接口的父类 */
+		CtClass superclass = pool.get(Cloneable.class.getName());
 		ctclass.setSuperclass(superclass);
-		
-		// 默认添加无参构造器  
-		CtConstructor cons = new CtConstructor(null, ctclass);  
-		cons.setBody("{}");  
-		ctclass.addConstructor(cons);
 		
 		// 当 ClassPool.doPruning=true的时候，Javassist 在CtClass object被冻结时，会释放存储在ClassPool对应的数据。这样做可以减少javassist的内存消耗。默认情况ClassPool.doPruning=false。
 		this.ctclass.stopPruning(true);
@@ -82,47 +82,22 @@ public class EndpointApiCtClassBuilder implements Builder<CtClass> {
 	 * @param targetNamespace：指定你想要的名称空间，默认是使用接口实现类的包名的反缀（字符串）
 	 * @return
 	 */
-	public EndpointApiCtClassBuilder annotationForType(final String name, final String targetNamespace) {
-		return this.annotationForType(targetNamespace, targetNamespace, null, null, null, null);
-	}
-	
-	public EndpointApiCtClassBuilder annotationForType(final String name, final String targetNamespace, String serviceName) {
-		return this.annotationForType(targetNamespace, targetNamespace, serviceName, null, null, null);
-	}
-	
-	/**
-	 * @description ： 给动态类添加 @WebService 注解
-	 * @param name： 此属性的值包含XML Web Service的名称。在默认情况下，该值是实现XML Web Service的类的名称，wsdl:portType 的名称。缺省值为 Java 类或接口的非限定名称。（字符串）
-	 * @param targetNamespace：指定你想要的名称空间，默认是使用接口实现类的包名的反缀（字符串）
-	 * @param serviceName： 对外发布的服务名，指定 Web Service 的服务名称：wsdl:service。缺省值为 Java 类的简单名称 + Service。（字符串）
-	 * @param portName：  wsdl:portName。缺省值为 WebService.name+Port。（字符串）
-	 * @param wsdlLocation：指定用于定义 Web Service 的 WSDL 文档的 Web 地址。Web 地址可以是相对路径或绝对路径。（字符串）
-	 * @param endpointInterface： 服务接口全路径, 指定做SEI（Service EndPoint Interface）服务端点接口（字符串）
-	 * @return
-	 */
-	public EndpointApiCtClassBuilder annotationForType(final String name, final String targetNamespace, String serviceName,
-			String portName, String wsdlLocation, String endpointInterface) {
+	public EndpointApiCtClassBuilder annotationForType(final String path, final String... mediaTypes) {
 
 		ConstPool constPool = this.ccFile.getConstPool();
-		
-		// 添加类注解 @WebService 
+		 
+		// 添加类注解 @Path
 		AnnotationsAttribute classAttr = new AnnotationsAttribute(constPool, AnnotationsAttribute.visibleTag);
-		Annotation ws = new Annotation(WebService.class.getName(), constPool);
-		ws.addMemberValue("name", new StringMemberValue(name, constPool));
-		ws.addMemberValue("targetNamespace", new StringMemberValue(targetNamespace, constPool));
-		if (StringUtils.hasText(serviceName)) {
-			ws.addMemberValue("serviceName", new StringMemberValue(serviceName, constPool));
-		}
-		if (StringUtils.hasText(portName)) {
-			ws.addMemberValue("portName", new StringMemberValue(portName, constPool));
-		}
-		if (StringUtils.hasText(wsdlLocation)) {
-			ws.addMemberValue("wsdlLocation", new StringMemberValue(wsdlLocation, constPool));
-		}
-		if (StringUtils.hasText(endpointInterface)) {
-			ws.addMemberValue("endpointInterface", new StringMemberValue(endpointInterface, constPool));
-		}
-		classAttr.addAnnotation(ws);
+		
+		Annotation pathAnnt = new Annotation(Path.class.getName(), constPool);
+		pathAnnt.addMemberValue("value", new StringMemberValue(path, constPool));
+		classAttr.addAnnotation(pathAnnt);
+		
+		// 添加类注解 @Produces
+		Annotation producesAnnt = new Annotation(Produces.class.getName(), constPool);
+		producesAnnt.addMemberValue("value", new ArrayMemberValue(mediaTypes, constPool));
+		classAttr.addAnnotation(producesAnnt);
+		
 		ccFile.addAttribute(classAttr);
 		
 		return this;
@@ -195,22 +170,6 @@ public class EndpointApiCtClassBuilder implements Builder<CtClass> {
 		
 		ctclass.removeField(ctclass.getDeclaredField(fieldName));
 		
-		return this;
-	}
-	
-	
-	/**
-     * Compiles the given source code and creates a method.
-     * The source code must include not only the method body
-     * but the whole declaration, for example,
-     *
-     * <pre>"public Object id(Object obj) { return obj; }"</pre>
-     *
-     * @param src               the source text. 
-     */
-	public <T> EndpointApiCtClassBuilder makeMethod(final String src) throws CannotCompileException {
-		//创建方法 
-		ctclass.addMethod(CtMethod.make(src, ctclass));
 		return this;
 	}
 	
@@ -534,8 +493,8 @@ public class EndpointApiCtClassBuilder implements Builder<CtClass> {
 	 * @throws CannotCompileException
 	 * @throws NotFoundException 
 	 */
-	public <T> EndpointApiCtClassBuilder newMethod(final Class<T> rtClass, final String methodName, CtWebParam<?>... params) throws CannotCompileException, NotFoundException {
-		return this.newMethod(new CtWebResult<T>(rtClass), new CtWebMethod(methodName), null, params);
+	public <T> EndpointApiCtClassBuilder abstractMethod(final Class<T> rtClass, final String methodName, CtWebParam<?>... params) throws CannotCompileException, NotFoundException {
+		return this.abstractMethod(new CtWebResult<T>(rtClass), new CtWebMethod(methodName), null, params);
 	}
 	
 	/**
@@ -549,8 +508,8 @@ public class EndpointApiCtClassBuilder implements Builder<CtClass> {
 	 * @throws CannotCompileException
 	 * @throws NotFoundException
 	 */
-	public <T> EndpointApiCtClassBuilder newMethod(final Class<T> rtClass, final String methodName, final CtWebBound bound, CtWebParam<?>... params) throws CannotCompileException, NotFoundException {
-		return this.newMethod(new CtWebResult<T>(rtClass), new CtWebMethod(methodName), bound, params);
+	public <T> EndpointApiCtClassBuilder abstractMethod(final Class<T> rtClass, final String methodName, final CtWebBound bound, CtWebParam<?>... params) throws CannotCompileException, NotFoundException {
+		return this.abstractMethod(new CtWebResult<T>(rtClass), new CtWebMethod(methodName), bound, params);
 	}
 	
 	/**
@@ -564,10 +523,13 @@ public class EndpointApiCtClassBuilder implements Builder<CtClass> {
 	 * @throws CannotCompileException
 	 * @throws NotFoundException 
 	 */ 
-	public <T> EndpointApiCtClassBuilder newMethod(final CtWebResult<T> result, final CtWebMethod method, final CtWebBound bound, CtWebParam<?>... params) throws CannotCompileException, NotFoundException {
+	public <T> EndpointApiCtClassBuilder abstractMethod(final CtWebResult<T> result, final CtWebMethod method, final CtWebBound bound, CtWebParam<?>... params) throws CannotCompileException, NotFoundException {
 	       
 		ConstPool constPool = this.ccFile.getConstPool();
 		
+		// 创建抽象方法
+		CtClass returnType = pool.get(result.getRtClass().getName());
+		CtClass[] exceptions = new CtClass[] { pool.get("java.lang.Exception") };
 		CtMethod ctMethod = null;
 		// 参数模式定义
 		Map<String, EnumMemberValue> modeMap = new HashMap<String, EnumMemberValue>();
@@ -588,35 +550,18 @@ public class EndpointApiCtClassBuilder implements Builder<CtClass> {
 				}
 			}
 			
-			// 构造方法
-			ctMethod = new CtMethod(this.pool.get(result.getRtClass().getName()), method.getOperationName(), paramTypes, ctclass);
-			ctMethod.setModifiers(Modifier.PUBLIC); 
+			// 构造抽象方法
+			ctMethod = CtNewMethod.abstractMethod(returnType, method.getOperationName(), paramTypes , exceptions, ctclass);
 			
 		} 
 		/**无参方法 */
 		else {
 			
-			ctMethod = new CtMethod(pool.get(result.getRtClass().getName()), method.getOperationName() , null, ctclass);
-			ctMethod.setModifiers(Modifier.PUBLIC);
+			// 构造抽象方法
+			ctMethod = CtNewMethod.abstractMethod(returnType, method.getOperationName(), null , exceptions, ctclass);
 			
 		}
 		
-		// 构造方法体
-		StringBuilder body = new StringBuilder(); 
-        body.append("{\n");
-        	body.append("if(getHandler() != null){\n");
-        		body.append("Method method = this.getClass().getDeclaredMethod(\"" + method.getOperationName() + "\", $sig);");
-        		body.append("return ($r)getHandler().invoke($0, method, $args);");
-        	body.append("}\n"); 
-	        body.append("return null;\n");
-        body.append("}"); 
-        // 将方法的内容设置为要写入的代码，当方法被 abstract修饰时，该修饰符被移除。
-        ctMethod.setBody(body.toString());
-        
-        // 构造异常处理逻辑
-        CtClass etype = pool.get("java.lang.Exception");
-        ctMethod.addCatch("{ System.out.println($e); throw $e; }", etype);
-        
         // 添加方法注解
         AnnotationsAttribute methodAttr = new AnnotationsAttribute(constPool, AnnotationsAttribute.visibleTag);
        

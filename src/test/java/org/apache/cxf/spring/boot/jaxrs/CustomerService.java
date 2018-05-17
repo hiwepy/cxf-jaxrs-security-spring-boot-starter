@@ -25,12 +25,14 @@ import javax.ws.rs.QueryParam;
 //@Produces("*/*")    
 @Produces("application/xml")    
 //@Produces("application/json")    
-public interface CustomerService {    
-    @GET    
+public interface CustomerService {
+	
+    @GET
     @Path(value = "/{id}/info")    
     Customer findCustomerById(@PathParam("id")String id);    
-        
+    
     @GET    
     @Path(value = "/search")    
     Customer findCustomerByName(@QueryParam("name")String name);    
+    
 }    

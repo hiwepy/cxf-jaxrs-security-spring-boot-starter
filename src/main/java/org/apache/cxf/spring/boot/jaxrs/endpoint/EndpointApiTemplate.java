@@ -15,40 +15,25 @@
  */
 package org.apache.cxf.spring.boot.jaxrs.endpoint;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-
-import javax.xml.ws.handler.Handler;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.cxf.Bus;
 import org.apache.cxf.endpoint.ServerImpl;
 import org.apache.cxf.ext.logging.LoggingFeature;
-import org.apache.cxf.ext.logging.LoggingInInterceptor;
-import org.apache.cxf.ext.logging.LoggingOutInterceptor;
-import org.apache.cxf.feature.Feature;
-import org.apache.cxf.interceptor.Interceptor;
 import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
 import org.apache.cxf.metrics.MetricsFeature;
 import org.apache.cxf.spring.boot.jaxrs.callback.DefaultEndpointCallback;
 import org.apache.cxf.validation.BeanValidationFeature;
 
-import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
-
 /**
  * TODO
  * @author ： <a href="https://github.com/vindell">vindell</a>
  */
-@SuppressWarnings("rawtypes")
 public class EndpointApiTemplate {
-
+	
 	private ConcurrentMap<String, ServerImpl> endpointServers = new ConcurrentHashMap<String, ServerImpl>();
-	private ConcurrentMap<String, Feature> features = new ConcurrentHashMap<String, Feature>();
-	private ConcurrentMap<String, Handler> handlers = new ConcurrentHashMap<String, Handler>();
-	private ConcurrentMap<String, Interceptor> interceptors = new ConcurrentHashMap<String, Interceptor>();
 	private Bus bus;
 	private EndpointCallback callback;
 	private LoggingFeature loggingFeature;
@@ -57,18 +42,18 @@ public class EndpointApiTemplate {
 
 	public EndpointApiTemplate(Bus bus) {
 		this.bus = bus;
-		this.callback = new DefaultEndpointCallback(features, handlers, interceptors, loggingFeature, metricsFeature, validationFeature);
+		this.callback = new DefaultEndpointCallback( loggingFeature, metricsFeature, validationFeature);
 	}
 
 	/**
 	 * 为指定的addr发布Endpoint
 	 * @author ： <a href="https://github.com/vindell">vindell</a>
 	 * @param addr
-	 * @param api
+	 * @param implementors
 	 * @return
 	 */
-	public ServerImpl publish(String addr, Object implementor) {
-		return this.publish(addr, implementor, callback);
+	public ServerImpl publish(String addr, Object... implementors) {
+		return this.publish(addr, callback, implementors);
 	}
 
 	/**
@@ -79,7 +64,7 @@ public class EndpointApiTemplate {
 	 * @param callback
 	 * @return
 	 */
-	public ServerImpl publish(String addr, Object implementor, EndpointCallback callback) {
+	public ServerImpl publish(String addr, EndpointCallback callback, Object... implementors) {
 		
 		// 1). 服务端工厂类
 		JAXRSServerFactoryBean factoryBean = new JAXRSServerFactoryBean();
@@ -88,19 +73,41 @@ public class EndpointApiTemplate {
 		factoryBean.setAddress(addr);
 		factoryBean.setBindingId(DigestUtils.md5Hex(addr));
 		factoryBean.setBus(bus);
-		factoryBean.setServiceBean(implementor); 
+		factoryBean.setServiceBeanObjects(implementors);
 		
-		callback.doCallback(implementor, factoryBean);
+		// 3). 调用回调函数，个性化设置拦截器、Provider、Feature
+		callback.doCallback(factoryBean, implementors );
 
-		// 3). 添加 Provider，用于支持自动解析各种数据格式、如Json
-		List<Object> providerList = new ArrayList<Object>();
-		providerList.add(new JacksonJsonProvider());
-		factoryBean.setProviders(providerList); 
+		// 4). 创建并发布服务，会发起一个http服务，默认使用Jetty
+		ServerImpl server = (ServerImpl) factoryBean.create();
+		
+		endpointServers.put(addr, server);
 
-		// 添加输入&输出日志（可选）
-		factoryBean.getInInterceptors().add(new LoggingInInterceptor());
-		factoryBean.getOutInterceptors().add(new LoggingOutInterceptor());
-
+		return server;
+	}
+	
+	/**
+	 * 为指定的addr发布Endpoint
+	 * @author 		： <a href="https://github.com/vindell">vindell</a>
+	 * @param addr
+	 * @param callback
+	 * @param classes
+	 * @return
+	 */
+	public ServerImpl publish(String addr, EndpointCallback callback, Class<?>... classes) {
+		
+		// 1). 服务端工厂类
+		JAXRSServerFactoryBean factoryBean = new JAXRSServerFactoryBean();
+		
+		// 2). 设置属性
+		factoryBean.setAddress(addr);
+		factoryBean.setBindingId(DigestUtils.md5Hex(addr));
+		factoryBean.setBus(bus);
+		factoryBean.setResourceClasses(classes);
+		
+		// 3). 调用回调函数，个性化设置拦截器、Provider、Feature
+		callback.doCallback(factoryBean, classes );
+		
 		// 4). 创建并发布服务，会发起一个http服务，默认使用Jetty
 		ServerImpl server = (ServerImpl) factoryBean.create();
 		
@@ -120,30 +127,6 @@ public class EndpointApiTemplate {
 			myServer.destroy();
 		}
 	}
-	
-	public ConcurrentMap<String, Feature> getFeatures() {
-		return features;
-	}
-
-	public void setFeatures(Map<String, Feature> features) {
-		this.features.putAll(features);
-	}
-
-	public ConcurrentMap<String, Interceptor> getInterceptors() {
-		return interceptors;
-	}
-
-	public void setInterceptors(Map<String, Interceptor> interceptorsOfType) {
-		this.interceptors.putAll(interceptorsOfType);
-	}
-
-	public ConcurrentMap<String, Handler> getHandlers() {
-		return handlers;
-	}
-
-	public void setHandlers(Map<String, Handler> handlers) {
-		this.handlers.putAll(handlers);
-	}
 
 	public Bus getBus() {
 		return bus;
@@ -153,18 +136,6 @@ public class EndpointApiTemplate {
 		this.bus = bus;
 	}
 
-	public void addFeature(String name, Feature feature) {
-		this.features.put(name, feature);
-	}
-
-	public void addInterceptor(String name, Interceptor in) {
-		this.interceptors.put(name, in);
-	}
- 
-	public void addHandler(String name, Handler handler) {
-		this.handlers.put(name, handler);
-	}
-	
 	public LoggingFeature getLoggingFeature() {
 		return loggingFeature;
 	}

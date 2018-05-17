@@ -15,123 +15,74 @@
  */
 package org.apache.cxf.spring.boot.jaxrs.callback;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.concurrent.ConcurrentMap;
-
-import javax.xml.ws.Endpoint;
-import javax.xml.ws.handler.Handler;
+import java.util.List;
 
 import org.apache.cxf.ext.logging.LoggingFeature;
 import org.apache.cxf.ext.logging.LoggingInInterceptor;
 import org.apache.cxf.ext.logging.LoggingOutInterceptor;
-import org.apache.cxf.feature.Feature;
-import org.apache.cxf.interceptor.Interceptor;
 import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
 import org.apache.cxf.metrics.MetricsFeature;
 import org.apache.cxf.spring.boot.jaxrs.endpoint.EndpointCallback;
-import org.apache.cxf.spring.boot.jaxws.annotation.JaxwsEndpoint;
 import org.apache.cxf.validation.BeanValidationFeature;
-import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.util.ObjectUtils;
+
+import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 
 /**
  * TODO
  * @author ： <a href="https://github.com/vindell">vindell</a>
  */
-@SuppressWarnings("rawtypes")
 public class DefaultEndpointCallback implements EndpointCallback {
 
-	private ConcurrentMap<String, Feature> features = null;
-	private ConcurrentMap<String, Handler> handlers = null;
-	private ConcurrentMap<String, Interceptor> interceptors = null;
 	private LoggingFeature loggingFeature;
 	private MetricsFeature metricsFeature;
 	private BeanValidationFeature validationFeature;
 
-	/**
-	 * TODO
-	 * 
-	 * @author : <a href="https://github.com/vindell">vindell</a>
-	 * @param features
-	 * @param handlers
-	 * @param interceptors
-	 */
-	public DefaultEndpointCallback(ConcurrentMap<String, Feature> features, ConcurrentMap<String, Handler> handlers,
-			ConcurrentMap<String, Interceptor> interceptors, LoggingFeature loggingFeature,
+	public DefaultEndpointCallback(LoggingFeature loggingFeature,
 			MetricsFeature metricsFeature, BeanValidationFeature validationFeature) {
-		this.features = features;
-		this.handlers = handlers;
-		this.interceptors = interceptors;
 		this.loggingFeature = loggingFeature;
 		this.metricsFeature = metricsFeature;
 		this.validationFeature = validationFeature;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public Endpoint doCallback(Object implementor, JAXRSServerFactoryBean factoryBean) {
+	public void doCallback(JAXRSServerFactoryBean factoryBean, Object... implementors ) {
 
-		// 查找该实现上的自定义注解
-		JaxwsEndpoint annotationType = AnnotationUtils.findAnnotation(implementor.getClass(), JaxwsEndpoint.class);
-		if (annotationType != null) {
-			// 数据上行拦截器
-			for (String name : annotationType.inInterceptors()) {
-				Interceptor interceptor = interceptors.get(name);
-				if (!ObjectUtils.isEmpty(interceptor)) {
-					endpoint.getInInterceptors().add(interceptor);
-				}
-			}
-			// 数据下行拦截器
-			for (String name : annotationType.outInterceptors()) {
-				Interceptor interceptor = interceptors.get(name);
-				if (!ObjectUtils.isEmpty(interceptor)) {
-					endpoint.getOutInterceptors().add(interceptor);
-				}
-			}
-			// 数据上行Fault拦截器
-			for (String name : annotationType.inFaults()) {
-				Interceptor interceptor = interceptors.get(name);
-				if (!ObjectUtils.isEmpty(interceptor)) {
-					endpoint.getInFaultInterceptors().add(interceptor);
-				}
-			}
-			// 数据下行Fault拦截器
-			for (String name : annotationType.outFaults()) {
-				Interceptor interceptor = interceptors.get(name);
-				if (!ObjectUtils.isEmpty(interceptor)) {
-					endpoint.getOutFaultInterceptors().add(interceptor);
-				}
-			}
+		// 3). 添加 Provider，用于支持自动解析各种数据格式、如Json
+		List<Object> providerList = new ArrayList<Object>();
+		providerList.add(new JacksonJsonProvider());
+		factoryBean.setProviders(providerList); 
 
-			// Feature
-			for (String name : annotationType.features()) {
-				Feature feature = features.get(name);
-				if (!ObjectUtils.isEmpty(feature)) {
-					endpoint.getFeatures().add(feature);
-				}
-			}
+		// 添加输入& 输出日志（可选）
+		factoryBean.getInInterceptors().add(new LoggingInInterceptor());
+		factoryBean.getOutInterceptors().add(new LoggingOutInterceptor());
+		
+		factoryBean.getFeatures().addAll(Arrays.asList(metricsFeature, loggingFeature, validationFeature));
 
-			// Handler
-			for (String name : annotationType.features()) {
-				Handler handler = handlers.get(name);
-				if (!ObjectUtils.isEmpty(handler)) {
-					endpoint.getHandlers().add(handler);
-				}
-			}
-		} else {
+	}
 
-			endpoint.getInInterceptors().add(new LoggingInInterceptor());
-			endpoint.getOutInterceptors().add(new LoggingOutInterceptor());
-			
-			endpoint.getFeatures().addAll(Arrays.asList(metricsFeature, loggingFeature, validationFeature));
+	/**
+	 * TODO
+	 * @author 		：<a href="https://github.com/vindell">vindell</a>
+	 * @param endpointFactory
+	 * @param classes
+	 */
+	
+	@Override
+	public void doCallback(JAXRSServerFactoryBean factoryBean, Class<?>... classes) {
 
-			
-			factoryBean.setFeatures(features2);
-			factoryBean.setInFaultInterceptors(interceptors);
-			factoryBean.setOutInterceptors(interceptors);
-		}
+		// 3). 添加 Provider，用于支持自动解析各种数据格式、如Json
+		List<Object> providerList = new ArrayList<Object>();
+		providerList.add(new JacksonJsonProvider());
+		factoryBean.setProviders(providerList); 
 
-		return endpoint;
+		// 添加输入& 输出日志（可选）
+		factoryBean.getInInterceptors().add(new LoggingInInterceptor());
+		factoryBean.getOutInterceptors().add(new LoggingOutInterceptor());
+		
+		factoryBean.getFeatures().addAll(Arrays.asList(metricsFeature, loggingFeature, validationFeature));
+
 	}
 
 }

@@ -13,27 +13,25 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.apache.cxf.spring.boot.jaxrs.endpoint;
+package org.apache.cxf.spring.boot.jaxrs;
 
-import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
-
-
-/**
- * TODO
- * @author 		： <a href="https://github.com/vindell">vindell</a>
- */
-public interface EndpointCallback {
-
-	/**
-	 * 
-	 * TODO
-	 * @author 		： <a href="https://github.com/vindell">vindell</a>
-	 * @param implementor
-	 * @param endpointFactory
-	 * @return
-	 */
-	void doCallback(JAXRSServerFactoryBean factoryBean, Object... implementors);
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+  
+@Path(value = "/customer3")     
+//@Produces("*/*")    
+@Produces("application/xml")    
+//@Produces("application/json")    
+public interface CustomerService3 {    
 	
-	void doCallback(JAXRSServerFactoryBean factoryBean, Class<?>... classes);
-	
-}
+    @GET    
+    @Path(value = "/{id}/info")    
+    Customer findCustomerById(@PathParam("id")String id);    
+        
+    @GET    
+    @Path(value = "/search")    
+    Customer findCustomerByName(@QueryParam("name")String name);    
+}    
