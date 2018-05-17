@@ -1,25 +1,48 @@
 package org.apache.cxf.spring.boot;
 
+import java.lang.annotation.Annotation;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import javax.jws.WebService;
+import javax.ws.rs.Path;
+import javax.ws.rs.ext.Provider;
+import javax.xml.ws.handler.Handler;
 
 import org.apache.cxf.Bus;
+import org.apache.cxf.BusFactory;
 import org.apache.cxf.bus.spring.SpringBus;
+import org.apache.cxf.common.util.ClasspathScanner;
 import org.apache.cxf.endpoint.Server;
+import org.apache.cxf.ext.logging.LoggingFeature;
+import org.apache.cxf.feature.Feature;
 import org.apache.cxf.interceptor.Interceptor;
 import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
+import org.apache.cxf.jaxrs.spring.JAXRSServerFactoryBeanDefinitionParser;
 import org.apache.cxf.jaxrs.swagger.Swagger2Feature;
 import org.apache.cxf.jaxrs.validation.JAXRSBeanValidationInInterceptor;
 import org.apache.cxf.jaxrs.validation.JAXRSBeanValidationOutInterceptor;
 import org.apache.cxf.jaxrs.validation.ValidationExceptionMapper;
 import org.apache.cxf.message.Message;
+import org.apache.cxf.metrics.MetricsFeature;
+import org.apache.cxf.metrics.MetricsProvider;
+import org.apache.cxf.metrics.codahale.CodahaleMetricsProvider;
 import org.apache.cxf.rs.security.oauth2.grants.code.EHCacheCodeDataProvider;
 import org.apache.cxf.rs.security.oauth2.provider.DefaultEHCacheOAuthDataProvider;
 import org.apache.cxf.rs.security.oauth2.provider.OAuthDataProvider;
 import org.apache.cxf.rs.security.oauth2.services.AccessTokenService;
+import org.apache.cxf.service.factory.ServiceConstructionException;
 import org.apache.cxf.spring.boot.endpoint.APIEndpoint;
 import org.apache.cxf.spring.boot.endpoint.APIEndpointRepository;
+import org.apache.cxf.spring.boot.jaxws.annotation.JaxwsEndpoint;
+import org.apache.cxf.spring.boot.jaxws.endpoint.EndpointApiTemplate;
+import org.apache.cxf.spring.boot.jaxws.property.LoggingFeatureProperty;
 import org.apache.cxf.transport.servlet.CXFServlet;
+import org.apache.cxf.validation.BeanValidationFeature;
 import org.apache.cxf.validation.BeanValidationProvider;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +56,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.ObjectUtils;
 
 //http://cxf.apache.org/docs/springboot.html
 @AutoConfigureAfter(name = { "org.apache.cxf.spring.boot.autoconfigure.CxfAutoConfiguration" })
@@ -53,12 +77,22 @@ public class CxfJaxrsAutoConfiguration implements ApplicationContextAware {
 	@Bean
 	@ConditionalOnMissingBean(Bus.class)
 	public Bus bus() {
-		return new SpringBus();
+		SpringBus bus = new SpringBus();
+		BusFactory.setDefaultBus(bus);
+		return bus;
 	}
 
 	@Bean
-	public List<APIEndpoint> apiEndpoints() {
-		return getEndpointRepository().getEndpoints();
+	@ConditionalOnMissingBean(BeanValidationProvider.class)
+	public BeanValidationProvider validationProvider() {
+		return new BeanValidationProvider();
+	}
+
+	@Bean
+	public BeanValidationFeature validationFeature(BeanValidationProvider validationProvider) {
+		BeanValidationFeature feature = new BeanValidationFeature();
+		feature.setProvider(validationProvider);
+		return feature;
 	}
 
 	@Bean
@@ -66,10 +100,113 @@ public class CxfJaxrsAutoConfiguration implements ApplicationContextAware {
 		return new ValidationExceptionMapper();
 	}
 
+	
 	@Bean
-	public BeanValidationProvider validationProvider() {
-		return new BeanValidationProvider();
+	public LoggingFeature loggingFeature(CxfJaxwsProperties properties) {
+		
+		LoggingFeatureProperty property = properties.getLoggingFeature();
+
+		LoggingFeature feature = new LoggingFeature();
+		feature.setInMemThreshold(property.getThreshold());
+		feature.setLimit(property.getLimit());
+		feature.setLogBinary(property.isLogBinary());
+		feature.setLogMultipart(property.isLogMultipart());
+		feature.setPrettyLogging(property.isPrettyLogging());
+		feature.setVerbose(property.isVerbose());
+		
+		return feature;
 	}
+	
+	@Bean
+	@ConditionalOnMissingBean(MetricsProvider.class)
+	public MetricsProvider metricsProvider(Bus bus) {
+		return new CodahaleMetricsProvider(bus);
+	}
+
+	@Bean
+	public MetricsFeature metricsFeature(MetricsProvider metricsProvider) {
+		return new MetricsFeature(metricsProvider);
+	}
+	
+	@Bean
+	public EndpointApiTemplate endpointTemplate(Bus bus,
+			LoggingFeature loggingFeature,
+			MetricsFeature metricsFeature,
+			BeanValidationFeature validationFeature) {
+
+		Map<String, Feature> featuresOfType = getApplicationContext().getBeansOfType(Feature.class);
+		Map<String, Handler> handlersOfType = getApplicationContext().getBeansOfType(Handler.class);
+		Map<String, Interceptor> interceptorsOfType = getApplicationContext().getBeansOfType(Interceptor.class);
+
+		EndpointApiTemplate template = new EndpointApiTemplate(bus);
+
+		template.setFeatures(featuresOfType);
+		template.setHandlers(handlersOfType);
+		template.setInterceptors(interceptorsOfType);
+		template.setLoggingFeature(loggingFeature);
+		template.setMetricsFeature(metricsFeature);
+		template.setValidationFeature(validationFeature);
+		
+		// 动态创建、发布 Ws
+		Map<String, Object> beansOfType = getApplicationContext().getBeansWithAnnotation(WebService.class);
+		if (!ObjectUtils.isEmpty(beansOfType)) {
+
+			Iterator<Entry<String, Object>> ite = beansOfType.entrySet().iterator();
+			while (ite.hasNext()) {
+				Entry<String, Object> entry = ite.next();
+				// 查找该实现上的自定义注解
+				JaxwsEndpoint annotationType = getApplicationContext().findAnnotationOnBean(entry.getKey(),
+						JaxwsEndpoint.class);
+				if (annotationType == null) {
+					// 注解为空，则跳过该实现，并打印错误信息
+					LOG.error("Not Found AnnotationType {0} on Bean {1} Whith Name {2}", JaxwsEndpoint.class,
+							entry.getValue().getClass(), entry.getKey());
+					continue;
+				}
+				template.publish(annotationType.addr(), entry.getValue());
+			}
+		}
+
+		return template;
+	}
+	
+	
+	protected Server createJaxRsServer() {
+
+        JAXRSServerFactoryBean factory = new JAXRSServerFactoryBean();
+        factory.setAddress(getAddress());
+        factory.setTransportId(getTransportId());
+        factory.setBus(getBus());
+
+        setJaxrsResources(factory);
+
+        factory.setInInterceptors(getInInterceptors());
+        factory.setOutInterceptors(getOutInterceptors());
+        factory.setOutFaultInterceptors(getOutFaultInterceptors());
+        factory.setFeatures(getFeatures());
+        finalizeFactorySetup(factory);
+        return factory.create();
+    }
+	
+	 protected void setJaxrsResources(JAXRSServerFactoryBean factory) {
+	        try {
+	            final Map< Class< ? extends Annotation >, Collection< Class< ? > > > classes =
+	                ClasspathScanner.findClasses(basePackages, Provider.class, Path.class);
+
+	            List<Object> jaxrsServices = JAXRSServerFactoryBeanDefinitionParser
+	                .createBeansFromDiscoveredClasses(super.applicationContext, classes.get(Path.class), null);
+	            List<Object> jaxrsProviders = JAXRSServerFactoryBeanDefinitionParser
+	                .createBeansFromDiscoveredClasses(super.applicationContext, classes.get(Provider.class), null);
+
+	            factory.setServiceBeans(jaxrsServices);
+	            factory.setProviders(jaxrsProviders);
+	        } catch (Exception ex) {
+	            throw new ServiceConstructionException(ex);
+	        }
+
+	    }
+
+	 
 
 	@Bean
 	public Server rsServer(BeanValidationProvider validationProvider) {

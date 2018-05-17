@@ -364,7 +364,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<cxf.version>3.2.2</cxf.version>
+		<cxf.version>3.2.4</cxf.version>
 		<maven.version>3.0</maven.version>
        	<maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <maven-jar-plugin.version>3.0.2</maven-jar-plugin.version>
@@ -457,7 +457,9 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<!-- Jackson -->  
+		<!-- Json格式自动转换Provider，Jackson好用一些 -->
+		<!-- 也可以引入CXF自带的cxf-rt-rs-extension-providers（以及它默认使用jettison）-->
+		<!-- 也可以不使用Provider，直接使用CXF默认的Response.ResponseBuilder生成Response并返回，格式需要自己转换，例如使用Gson -->
         <dependency>  
            <groupId>com.fasterxml.jackson.jaxrs</groupId>  
            <artifactId>jackson-jaxrs-json-provider</artifactId>
@@ -633,19 +635,19 @@
 		    <version>${cxf.version}</version>
 		    <scope>test</scope>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.apache.ftpserver/ftplet-api -->
 		<dependency>
-		    <groupId>org.apache.ftpserver</groupId>
-		    <artifactId>ftplet-api</artifactId>
-		    <version>1.1.1</version>
+			<groupId>com.github.vindell</groupId>
+			<artifactId>javassist-plus</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.apache.ftpserver/ftpserver-core -->
+		<!-- https://mvnrepository.com/artifact/org.apache.cxf/cxf-rt-transports-http-jetty -->
 		<dependency>
-		    <groupId>org.apache.ftpserver</groupId>
-		    <artifactId>ftpserver-core</artifactId>
-		    <version>1.1.1</version>
+		    <groupId>org.apache.cxf</groupId>
+		    <artifactId>cxf-rt-transports-http-jetty</artifactId>
+		    <version>${cxf.version}</version>
 		    <scope>test</scope>
 		</dependency>
+		
 
 	</dependencies>
 
