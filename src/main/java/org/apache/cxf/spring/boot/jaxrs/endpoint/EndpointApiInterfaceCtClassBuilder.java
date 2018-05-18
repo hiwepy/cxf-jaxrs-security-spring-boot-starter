@@ -9,6 +9,7 @@ import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebParam.Mode;
 import javax.jws.WebResult;
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
@@ -18,6 +19,7 @@ import org.apache.cxf.spring.boot.jaxrs.endpoint.ctweb.RestBound;
 import org.apache.cxf.spring.boot.jaxrs.endpoint.ctweb.RestMethod;
 import org.apache.cxf.spring.boot.jaxrs.endpoint.ctweb.RestParam;
 import org.apache.cxf.spring.boot.jaxrs.endpoint.ctweb.RestResult;
+import org.apache.cxf.spring.boot.jaxrs.endpoint.ctweb.HttpMethodEnum;
 import org.springframework.util.StringUtils;
 
 import com.github.vindell.javassist.utils.JavassistUtils;
@@ -28,7 +30,6 @@ import javassist.CtClass;
 import javassist.CtConstructor;
 import javassist.CtField;
 import javassist.CtMethod;
-import javassist.CtNewConstructor;
 import javassist.CtNewMethod;
 import javassist.Modifier;
 import javassist.NotFoundException;
@@ -51,33 +52,33 @@ import javassist.bytecode.annotation.StringMemberValue;
  * <p>https://my.oschina.net/GameKing/blog/794580</p>
  * <p>http://wsmajunfeng.iteye.com/blog/1912983</p>
  */
-public class EndpointApiCtClassBuilder implements Builder<CtClass> {
+public class EndpointApiInterfaceCtClassBuilder implements Builder<CtClass> {
 	
 	// 构建动态类
 	private ClassPool pool = null;
-	private CtClass declaring  = null;
+	private CtClass ctclass  = null;
 	private ClassFile ccFile = null;
 	//private Loader loader = new Loader(pool);
 	
-	public EndpointApiCtClassBuilder(final String classname) throws CannotCompileException, NotFoundException  {
+	public EndpointApiInterfaceCtClassBuilder(final String classname) throws CannotCompileException, NotFoundException  {
 		this(JavassistUtils.getDefaultPool(), classname);
 	}
 	
-	public EndpointApiCtClassBuilder(final ClassPool pool, final String classname) throws CannotCompileException, NotFoundException {
+	public EndpointApiInterfaceCtClassBuilder(final ClassPool pool, final String classname) throws CannotCompileException, NotFoundException {
 		
 		this.pool = pool;
-		this.declaring = this.pool.getOrNull(classname);
-		if( null == this.declaring) {
-			this.declaring = this.pool.makeInterface(classname);
+		this.ctclass = this.pool.getOrNull(classname);
+		if( null == this.ctclass) {
+			this.ctclass = this.pool.makeInterface(classname);
 		}
 		
 		/* 指定 Cloneable 作为动态接口的父类 */
 		CtClass superclass = pool.get(Cloneable.class.getName());
-		declaring.setSuperclass(superclass);
+		ctclass.setSuperclass(superclass);
 		
 		// 当 ClassPool.doPruning=true的时候，Javassist 在CtClass object被冻结时，会释放存储在ClassPool对应的数据。这样做可以减少javassist的内存消耗。默认情况ClassPool.doPruning=false。
-		this.declaring.stopPruning(true);
-		this.ccFile = this.declaring.getClassFile();
+		this.ctclass.stopPruning(true);
+		this.ccFile = this.ctclass.getClassFile();
 	}
 	
 	/**
@@ -86,7 +87,7 @@ public class EndpointApiCtClassBuilder implements Builder<CtClass> {
 	 * @param targetNamespace：指定你想要的名称空间，默认是使用接口实现类的包名的反缀（字符串）
 	 * @return
 	 */
-	public EndpointApiCtClassBuilder annotationForType(final String path, final String... mediaTypes) {
+	public EndpointApiInterfaceCtClassBuilder annotationForType(final String path, final String... mediaTypes) {
 
 		ConstPool constPool = this.ccFile.getConstPool();
 		 
@@ -124,7 +125,7 @@ public class EndpointApiCtClassBuilder implements Builder<CtClass> {
 	 * @param json
 	 * @return
 	 */
-	public EndpointApiCtClassBuilder bindDataForType(final String uid, final String json) {
+	public EndpointApiInterfaceCtClassBuilder bindDataForType(final String uid, final String json) {
 
 		ConstPool constPool = this.ccFile.getConstPool();
 		// 添加类注解 @WebBound
@@ -151,37 +152,37 @@ public class EndpointApiCtClassBuilder implements Builder<CtClass> {
      *
      * @param src               the source text.
      */
-	public <T> EndpointApiCtClassBuilder makeField(final String src) throws CannotCompileException {
+	public <T> EndpointApiInterfaceCtClassBuilder makeField(final String src) throws CannotCompileException {
 		//创建属性
-        declaring.addField(CtField.make(src, declaring));
+        ctclass.addField(CtField.make(src, ctclass));
 		return this;
 	}
 	
-	public <T> EndpointApiCtClassBuilder newField(final Class<T> fieldClass, final String fieldName, final String fieldValue) throws CannotCompileException, NotFoundException {
+	public <T> EndpointApiInterfaceCtClassBuilder newField(final Class<T> fieldClass, final String fieldName, final String fieldValue) throws CannotCompileException, NotFoundException {
 		
 		// 检查字段是否已经定义
-		if(JavassistUtils.hasField(declaring, fieldName)) {
+		if(JavassistUtils.hasField(ctclass, fieldName)) {
 			return this;
 		}
 		
 		/** 添加属性字段 */
-		CtField field = new CtField(this.pool.get(fieldClass.getName()), fieldName, declaring);
+		CtField field = new CtField(this.pool.get(fieldClass.getName()), fieldName, ctclass);
         field.setModifiers(Modifier.PRIVATE);
 
         //新增Field
-        declaring.addField(field, "\"" + fieldValue + "\"");
+        ctclass.addField(field, "\"" + fieldValue + "\"");
         
 		return this;
 	}
 	
-	public <T> EndpointApiCtClassBuilder removeField(final String fieldName) throws NotFoundException {
+	public <T> EndpointApiInterfaceCtClassBuilder removeField(final String fieldName) throws NotFoundException {
 		
 		// 检查字段是否已经定义
-		if(!JavassistUtils.hasField(declaring, fieldName)) {
+		if(!JavassistUtils.hasField(ctclass, fieldName)) {
 			return this;
 		}
 		
-		declaring.removeField(declaring.getDeclaredField(fieldName));
+		ctclass.removeField(ctclass.getDeclaredField(fieldName));
 		
 		return this;
 	}
@@ -196,7 +197,7 @@ public class EndpointApiCtClassBuilder implements Builder<CtClass> {
 	 * @throws CannotCompileException
 	 * @throws NotFoundException 
 	 */
-	public <T> EndpointApiCtClassBuilder abstractMethod(final Class<T> rtClass, final String methodName, RestParam<?>... params) throws CannotCompileException, NotFoundException {
+	public <T> EndpointApiInterfaceCtClassBuilder abstractMethod(final Class<T> rtClass, final String methodName, RestParam<?>... params) throws CannotCompileException, NotFoundException {
 		return this.abstractMethod(new RestResult<T>(rtClass), new RestMethod(methodName), null, params);
 	}
 	
@@ -204,15 +205,15 @@ public class EndpointApiCtClassBuilder implements Builder<CtClass> {
 	 * 
 	 * @author 		： <a href="https://github.com/vindell">vindell</a>
 	 * @param rtClass 		：方法返回类型
-	 * @param methodName 	：方法名称
+	 * @param methodName 	：方法名称 {@link javax.ws.rs.HttpMethod}
 	 * @param bound			：方法绑定数据信息
 	 * @param params		： 参数信息
 	 * @return
 	 * @throws CannotCompileException
 	 * @throws NotFoundException
 	 */
-	public <T> EndpointApiCtClassBuilder abstractMethod(final Class<T> rtClass, final String methodName, final RestBound bound, RestParam<?>... params) throws CannotCompileException, NotFoundException {
-		return this.abstractMethod(new RestResult<T>(rtClass), new RestMethod(methodName), bound, params);
+	public <T> EndpointApiInterfaceCtClassBuilder abstractMethod(final Class<T> rtClass, final String method, final RestBound bound, RestParam<?>... params) throws CannotCompileException, NotFoundException {
+		return this.abstractMethod(new RestResult<T>(rtClass), HttpMethodEnum.POST, bound, params);
 	}
 	
 	/**
@@ -226,7 +227,7 @@ public class EndpointApiCtClassBuilder implements Builder<CtClass> {
 	 * @throws CannotCompileException
 	 * @throws NotFoundException 
 	 */ 
-	public <T> EndpointApiCtClassBuilder abstractMethod(final RestResult<T> result, final RestMethod method, final RestBound bound, RestParam<?>... params) throws CannotCompileException, NotFoundException {
+	public <T> EndpointApiInterfaceCtClassBuilder abstractMethod(final RestResult<T> result, final HttpMethodEnum method, final RestBound bound, RestParam<?>... params) throws CannotCompileException, NotFoundException {
 	       
 		ConstPool constPool = this.ccFile.getConstPool();
 		
@@ -254,20 +255,20 @@ public class EndpointApiCtClassBuilder implements Builder<CtClass> {
 			}
 			
 			// 构造抽象方法
-			ctMethod = CtNewMethod.abstractMethod(returnType, method.getOperationName(), paramTypes , exceptions, declaring);
+			ctMethod = CtNewMethod.abstractMethod(returnType, method.getOperationName(), paramTypes , exceptions, ctclass);
 			
 		} 
 		/**无参方法 */
 		else {
 			
 			// 构造抽象方法
-			ctMethod = CtNewMethod.abstractMethod(returnType, method.getOperationName(), null , exceptions, declaring);
+			ctMethod = CtNewMethod.abstractMethod(returnType, method.getOperationName(), null , exceptions, ctclass);
 			
 		}
 		
         // 添加方法注解
         AnnotationsAttribute methodAttr = new AnnotationsAttribute(constPool, AnnotationsAttribute.visibleTag);
-       
+        
         // 添加 @WebMethod 注解	        
         Annotation methodAnnot = new Annotation(WebMethod.class.getName(), constPool);
         methodAnnot.addMemberValue("operationName", new StringMemberValue(method.getOperationName(), constPool));
@@ -340,12 +341,12 @@ public class EndpointApiCtClassBuilder implements Builder<CtClass> {
         }
         
         //新增方法
-        declaring.addMethod(ctMethod);
+        ctclass.addMethod(ctMethod);
         
         return this;
 	}
 	
-	public <T> EndpointApiCtClassBuilder removeMethod(final String methodName, RestParam<?>... params) throws NotFoundException {
+	public <T> EndpointApiInterfaceCtClassBuilder removeMethod(final String methodName, RestParam<?>... params) throws NotFoundException {
 		
 		// 有参方法
 		if(params != null && params.length > 0) {
@@ -357,21 +358,21 @@ public class EndpointApiCtClassBuilder implements Builder<CtClass> {
 			}
 			
 			// 检查方法是否已经定义
-			if(!JavassistUtils.hasMethod(declaring, methodName, paramTypes)) {
+			if(!JavassistUtils.hasMethod(ctclass, methodName, paramTypes)) {
 				return this;
 			}
 			
-			declaring.removeMethod(declaring.getDeclaredMethod(methodName, paramTypes));
+			ctclass.removeMethod(ctclass.getDeclaredMethod(methodName, paramTypes));
 			
 		}
 		else {
 			
 			// 检查方法是否已经定义
-			if(!JavassistUtils.hasMethod(declaring, methodName)) {
+			if(!JavassistUtils.hasMethod(ctclass, methodName)) {
 				return this;
 			}
 			
-			declaring.removeMethod(declaring.getDeclaredMethod(methodName));
+			ctclass.removeMethod(ctclass.getDeclaredMethod(methodName));
 			
 		}
 		
@@ -380,7 +381,7 @@ public class EndpointApiCtClassBuilder implements Builder<CtClass> {
 	
 	@Override
 	public CtClass build() {
-        return declaring;
+        return ctclass;
 	}
 	
 	/**
@@ -393,28 +394,26 @@ public class EndpointApiCtClassBuilder implements Builder<CtClass> {
 	public Class<?> toClass() throws CannotCompileException {
         try {
         	// 通过类加载器加载该CtClass
-			return declaring.toClass();
+			return ctclass.toClass();
 		} finally {
 			// 将该class从ClassPool中删除
-			declaring.detach();
+			ctclass.detach();
 		} 
 	}
 	
 	@SuppressWarnings("unchecked")
 	public Object toInstance(final InvocationHandler handler) throws CannotCompileException, NotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
         try {
-        	
         	// 添加有参构造器，注入回调接口
-        	CtClass[] parameters = new CtClass[] {pool.get(InvocationHandler.class.getName())};
-        	CtClass[] exceptions = new CtClass[] { pool.get("java.lang.Exception") };
-        	CtConstructor cc = CtNewConstructor.make(parameters, exceptions, "{super($1);}", declaring);
-			declaring.addConstructor(cc);
-			
+			CtConstructor cc = new CtConstructor(new CtClass[] { pool.get(InvocationHandler.class.getName()) }, ctclass);
+			cc.setBody("{super($1);}");
+			ctclass.addConstructor(cc);
+			// proxy.writeFile();
 			// 通过类加载器加载该CtClass，并通过构造器初始化对象
-			return declaring.toClass().getConstructor(InvocationHandler.class).newInstance(handler);
+			return ctclass.toClass().getConstructor(InvocationHandler.class).newInstance(handler);
 		} finally {
 			// 将该class从ClassPool中删除
-			declaring.detach();
+			ctclass.detach();
 		} 
 	}
 

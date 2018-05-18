@@ -27,7 +27,7 @@ public class ServerPublish {
 		factoryBean.getInInterceptors().add(new LoggingInInterceptor());
 		factoryBean.getOutInterceptors().add(new LoggingOutInterceptor());
 
-		factoryBean.setResourceClasses(CustomerServiceImpl.class, CustomerServiceImpl3.class);
+		factoryBean.setResourceClasses(CustomerServiceImpl.class, CustomerServiceImpl2.class, CustomerServiceImpl3.class);
 
 		factoryBean.setAddress("http://localhost:9000/ws/jaxrs");
 		factoryBean.create();
@@ -37,9 +37,9 @@ public class ServerPublish {
 		factoryBean2.getInInterceptors().add(new LoggingInInterceptor());
 		factoryBean2.getOutInterceptors().add(new LoggingOutInterceptor());
 	
-		factoryBean2.setResourceClasses(CustomerServiceImpl2.class);
+		factoryBean2.setResourceClasses(CustomerServiceImpl4.class);
 	
-		factoryBean2.setAddress("http://localhost:9000/ws/jaxrs2");
+		factoryBean2.setAddress("http://localhost:9000/ws/jaxrs4");
 		factoryBean2.create();
 
 		//
