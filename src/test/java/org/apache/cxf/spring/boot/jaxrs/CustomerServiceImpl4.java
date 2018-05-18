@@ -39,13 +39,6 @@ import org.apache.cxf.jaxrs.ext.DefaultMethod;
 // @Produces("application/json")
 public class CustomerServiceImpl4 {
 
-	@PathParam("id")
-	@QueryParam("id")
-	@MatrixParam("id")
-	@CookieParam("id")
-	@FormParam("myData")
-	@HeaderParam("myHeader")
-
 	@POST
 	@Path("{id}")
 	@Consumes

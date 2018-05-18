@@ -16,19 +16,25 @@
 package org.apache.cxf.spring.boot.javassist;
 
 import java.lang.reflect.InvocationHandler;
+import java.util.Calendar;
 
-import javax.jws.WebMethod;
-import javax.jws.WebParam;
-import javax.jws.WebResult;
-import javax.jws.WebService;
+import javax.ws.rs.BeanParam;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Response;
 
+import org.apache.cxf.spring.boot.jaxrs.Customer;
 import org.apache.cxf.spring.boot.jaxrs.endpoint.EndpointApi;
 
 
-@WebService(serviceName = "sample", // 与接口中指定的name一致
-		targetNamespace = "http://ws.cxf.com/"// , // 与接口中的命名空间一致,一般是接口的包名倒
-// endpointInterface = "org.apache.cxf.spring.boot.api.JaxwsSample"// 接口地址
-)
+@Path(value = "/sample")
+@Produces("application/json")
 public class EndpointApiSample extends EndpointApi {
 
 	public EndpointApiSample() {
@@ -37,34 +43,47 @@ public class EndpointApiSample extends EndpointApi {
 	public EndpointApiSample(InvocationHandler handler) {
 		super(handler);
 	}
-
-	/*
-	 * action 需要填写完成，有发现使用Soap接口调用无法识别
-	 */
-	@WebMethod(operationName = "sayHello", action = "http://ws.cxf.com/sayHello/")
-	@WebResult(name = "String", targetNamespace = "")
-	public String sayHello(@WebParam(name = "userName") String name) {
-		
-		//getHandler().invoke(this, method, args);
-		//Method method = this.getClass().getDeclaredMethod(name, $sig);
-		//getHandler().invoke($0, method, $args);
-		
-		return "Hello ," + name;
+	
+	@POST
+	@Path("add")
+	@Consumes
+	public Response post(@BeanParam Customer myBean) {
+		return Response.status(200).entity("getUserById is called, id : " + myBean.getId()).build(); 
 	}
 
-	@WebMethod(operationName = "sayHello2", action = "http://ws.cxf.com/sayHello/")
-	@WebResult(name = "String", targetNamespace = "")
-	public String sayHello2(@WebParam(name = "userName") String name) {
-		return "Hello ," + name;
+	@GET
+	@Path("/{type}/list")
+	@Consumes
+	public Customer findCustomerByType(@PathParam("type") @DefaultValue("a") String type) {
+		Customer customer = new Customer();
+		customer.setId(type);
+		customer.setName("xiaojing" + type);
+		customer.setBirthday(Calendar.getInstance().getTime());
+		System.out.println(">>>>>>>>>>>>>服务端信息：" + customer);
+		return customer;
 	}
 	
-	@WebMethod(operationName = "invoke", action = "http://ws.cxf.com/sayHello/")
-	@WebResult(name = "String", targetNamespace = "")
-	public String invoke(@WebParam(name = "userName") String name) {
-		
-		//this.getHandler().invoke(this, method, args)
-		
-		return "Hello ," + name;
+	@GET
+	@Path("/{id}/info")
+	@Consumes
+	public Customer findCustomerById(@PathParam("id") String id) {
+		Customer customer = new Customer();
+		customer.setId(id);
+		customer.setName("xiaojing" + id);
+		customer.setBirthday(Calendar.getInstance().getTime());
+		System.out.println(">>>>>>>>>>>>>服务端信息：" + customer);
+		return customer;
+	}
+
+	@GET
+	@Path(value = "/search")
+	public Customer findCustomerByName(@QueryParam("name") String name) {
+		Customer customer = new Customer();
+		customer.setId(name);
+		customer.setName(name);
+		customer.setBirthday(Calendar.getInstance().getTime());
+		System.out.println(">>>>>>>>>>>>>服务端信息：" + customer);
+		return customer;
 	}
 	
 }

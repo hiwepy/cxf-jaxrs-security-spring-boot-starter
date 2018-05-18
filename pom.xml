@@ -364,6 +364,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<commons-io.version>2.5</commons-io.version>
 		<cxf.version>3.2.4</cxf.version>
 		<maven.version>3.0</maven.version>
        	<maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
@@ -431,14 +432,27 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-autoconfigure</artifactId>
 		</dependency>
-
+		
+		<!-- Commons-IO contains utility classes, stream implementations, file filters, and endian classes.  --> 
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>${commons-io.version}</version>
+		</dependency>
+		<!-- Apache Commons Lang, a package of Java utility classes for the classes that are in java.lang's hierarchy, 
+				or are considered to be so standard as to justify existence in java.lang.  -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
+		
 		<!-- CXF-Jaxrs Spring Boot Starter -->
 		<dependency>
 			<groupId>org.apache.cxf</groupId>
 			<artifactId>cxf-spring-boot-starter-jaxrs</artifactId>
 			<version>${cxf.version}</version>
 		</dependency>
-
+		
 		<!-- http://mvnrepository.com/artifact/org.apache.cxf -->
 		
 		<!-- cxf-rt-databinding -->

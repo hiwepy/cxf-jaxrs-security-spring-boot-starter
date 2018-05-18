@@ -26,7 +26,12 @@ import javax.ws.rs.PUT;
 public class RestMethod {
 
 	/**
-	 * Associates the name of a HTTP method with an annotation. * @see HttpMethod
+	 * Java 方法的名称
+	 */
+	private final String name;
+
+	/**
+	 * Associates the name of a HTTP method with an annotation.
 	 * @see GET
 	 * @see POST
 	 * @see PUT
@@ -52,14 +57,16 @@ public class RestMethod {
 	 * @see javax.ws.rs.Consumes
 	 */
 	private String[] consumes;
-	
-	public RestMethod(HttpMethodEnum method, String path) {
+
+	public RestMethod(HttpMethodEnum method, String name, String path) {
 		this.method = method;
+		this.name = name;
 		this.path = path;
 	}
 
-	public RestMethod(HttpMethodEnum method, String path, String... consumes) {
+	public RestMethod(HttpMethodEnum method, String name, String path, String... consumes) {
 		this.method = method;
+		this.name = name;
 		this.path = path;
 		this.consumes = consumes;
 	}
@@ -72,6 +79,10 @@ public class RestMethod {
 		this.consumes = consumes;
 	}
 
+	public String getName() {
+		return name;
+	}
+
 	public HttpMethodEnum getMethod() {
 		return method;
 	}
@@ -79,9 +90,5 @@ public class RestMethod {
 	public String getPath() {
 		return path;
 	}
-	
-	
-	
-	
-}
 
+}
