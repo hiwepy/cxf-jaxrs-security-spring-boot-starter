@@ -3,12 +3,12 @@ package org.apache.cxf.spring.boot.jaxrs.endpoint;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.builder.Builder;
 import org.apache.cxf.spring.boot.jaxrs.endpoint.ctweb.HttpMethodEnum;
 import org.apache.cxf.spring.boot.jaxrs.endpoint.ctweb.RestBound;
 import org.apache.cxf.spring.boot.jaxrs.endpoint.ctweb.RestMethod;
 import org.apache.cxf.spring.boot.jaxrs.endpoint.ctweb.RestParam;
-import org.apache.cxf.spring.boot.jaxrs.endpoint.ctweb.RestProduce;
 import org.apache.cxf.spring.boot.jaxrs.utils.EndpointApiUtils;
 
 import com.github.vindell.javassist.utils.ClassPoolFactory;
@@ -22,7 +22,6 @@ import javassist.CtMethod;
 import javassist.CtNewConstructor;
 import javassist.Modifier;
 import javassist.NotFoundException;
-import javassist.bytecode.AnnotationsAttribute;
 import javassist.bytecode.ClassFile;
 import javassist.bytecode.ConstPool;
 
@@ -63,26 +62,29 @@ public class EndpointApiCtClassBuilder implements Builder<CtClass> {
 		
 	}
 	
-	public EndpointApiCtClassBuilder annotationForType(final RestProduce produce) {
-		return this.annotationForType(produce.getPath(), produce.getMediaTypes());
-	}
-	
-	public EndpointApiCtClassBuilder annotationForType(final String path, final String... mediaTypes) {
+	/**
+	 * 添加类注解 @Path
+	 * @param path : Defines a URI template for the resource class or method, must not include matrix parameters.
+	 * @return
+	 */
+	public EndpointApiCtClassBuilder path(final String path) {
 
 		ConstPool constPool = this.ccFile.getConstPool();
-		 
-		// 添加类注解 @Path
-		AnnotationsAttribute classAttr = new AnnotationsAttribute(constPool, AnnotationsAttribute.visibleTag);
+		JavassistUtils.addClassAnnotation(declaring, EndpointApiUtils.annotPath(constPool, path));
 		
-		// 设置类 @Path 注解
-		classAttr.addAnnotation(EndpointApiUtils.annotPath(constPool, path));
-		
-		// 设置类 @Produces 注解
-		if(mediaTypes != null && mediaTypes.length > 0) {
-	        classAttr.addAnnotation(EndpointApiUtils.annotProduces(constPool, mediaTypes));
-		}
-		
-		ccFile.addAttribute(classAttr);
+		return this;
+	}
+	
+	/**
+	 * 添加类注解 @Path
+	 * @param mediaTypes
+	 * @return
+	 */
+	public EndpointApiCtClassBuilder produces(final String... mediaTypes) {
+
+		String[] noyNullMediaTypes = ArrayUtils.isNotEmpty(mediaTypes) ? mediaTypes : new String[] { "*/*" };
+		ConstPool constPool = this.ccFile.getConstPool();
+		JavassistUtils.addClassAnnotation(declaring, EndpointApiUtils.annotProduces(constPool, noyNullMediaTypes));
 		
 		return this;
 	}
@@ -90,20 +92,17 @@ public class EndpointApiCtClassBuilder implements Builder<CtClass> {
 	/**
 	 * 通过给动态类增加 <code>@WebBound</code>注解实现，数据的绑定
 	 */
-	public EndpointApiCtClassBuilder annotationForType(final String uid, final String json) {
-		return annotationForType(new RestBound(uid, json));
+	public EndpointApiCtClassBuilder bind(final String uid, final String json) {
+		return bind(new RestBound(uid, json));
 	}
 	
 	/**
 	 * 通过给动态类增加 <code>@WebBound</code>注解实现，数据的绑定
 	 */
-	public EndpointApiCtClassBuilder annotationForType(final RestBound bound) {
+	public EndpointApiCtClassBuilder bind(final RestBound bound) {
 
 		ConstPool constPool = this.ccFile.getConstPool();
-		// 添加类注解 @WebBound
-		AnnotationsAttribute classAttr = new AnnotationsAttribute(constPool, AnnotationsAttribute.visibleTag);
-		classAttr.addAnnotation(EndpointApiUtils.annotWebBound(constPool, bound));
-		ccFile.addAttribute(classAttr);
+		JavassistUtils.addClassAnnotation(declaring, EndpointApiUtils.annotWebBound(constPool, bound));
 		
 		return this;
 	}

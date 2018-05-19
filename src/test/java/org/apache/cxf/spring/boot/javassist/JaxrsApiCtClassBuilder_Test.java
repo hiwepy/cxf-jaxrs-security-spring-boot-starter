@@ -26,7 +26,7 @@ public class JaxrsApiCtClassBuilder_Test {
 	public void testClass() throws Exception{
 		
 		CtClass ctClass = new EndpointApiCtClassBuilder("org.apache.cxf.spring.boot.FirstCase1")
-				.annotationForType("get", "http://ws.cxf.com", "getxx")
+				.path("getxx")
 				.makeField("public int k = 3;")
 				.newField(String.class, "uid", UUID.randomUUID().toString())
 				.newMethod(String.class, HttpMethodEnum.GET, "sayHello", "{id}/info" ,new RestParam(String.class, "id", HttpParamEnum.PATH))
@@ -85,7 +85,7 @@ public class JaxrsApiCtClassBuilder_Test {
 		InvocationHandler handler = new EndpointApiInvocationHandler();
 		
 		Object ctObject = new EndpointApiCtClassBuilder("org.apache.cxf.spring.boot.FirstCaseV2")
-				.annotationForType("get", "http://ws.cxf.com", "getxx")
+				.path("getxx")
 				.makeField("public int k = 3;")
 				.newField(String.class, "uid", UUID.randomUUID().toString())
 				.newMethod(String.class, HttpMethodEnum.GET, "sayHello", "{id}/info" , new RestBound("ID01201"),new RestParam(String.class, "id", HttpParamEnum.PATH))

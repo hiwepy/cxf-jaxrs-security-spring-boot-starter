@@ -45,16 +45,31 @@ public class EndpointApiImplCtClassBuilder extends EndpointApiCtClassBuilder imp
 		
 	}
 	
-	public EndpointApiCtClassBuilder annotationForType(final String path, final String... mediaTypes) {
-		this.classBuilder.annotationForType(path, mediaTypes);
+	/**
+	 * 添加类注解 @Path
+	 * @param path : Defines a URI template for the resource class or method, must not include matrix parameters.
+	 * @return
+	 */
+	public EndpointApiImplCtClassBuilder path(final String path) {
+		this.classBuilder.path(path);
+		return this;
+	}
+	
+	/**
+	 * 添加类注解 @Path
+	 * @param mediaTypes
+	 * @return
+	 */
+	public EndpointApiImplCtClassBuilder produces(final String... mediaTypes) {
+		this.classBuilder.produces(mediaTypes);
 		return this;
 	}
 	
 	/**
 	 * 通过给动态类增加 <code>@WebBound</code>注解实现，数据的绑定
 	 */
-	public EndpointApiCtClassBuilder annotationForType(final RestBound bound) {
-		this.classBuilder.annotationForType(bound);
+	public EndpointApiImplCtClassBuilder bind(final RestBound bound) {
+		this.classBuilder.bind(bound);
 		return this;
 	}
 	
