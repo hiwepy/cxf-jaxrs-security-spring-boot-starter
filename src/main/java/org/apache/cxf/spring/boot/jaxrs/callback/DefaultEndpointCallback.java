@@ -23,6 +23,7 @@ import org.apache.cxf.ext.logging.LoggingFeature;
 import org.apache.cxf.ext.logging.LoggingInInterceptor;
 import org.apache.cxf.ext.logging.LoggingOutInterceptor;
 import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
+import org.apache.cxf.jaxrs.swagger.Swagger2Feature;
 import org.apache.cxf.metrics.MetricsFeature;
 import org.apache.cxf.spring.boot.jaxrs.endpoint.EndpointCallback;
 import org.apache.cxf.validation.BeanValidationFeature;
@@ -53,7 +54,10 @@ public class DefaultEndpointCallback implements EndpointCallback {
 		List<Object> providerList = new ArrayList<Object>();
 		providerList.add(new JacksonJsonProvider());
 		factoryBean.setProviders(providerList); 
-
+		
+		//new Swagger2Feature()
+		
+		
 		// 添加输入& 输出日志（可选）
 		factoryBean.getInInterceptors().add(new LoggingInInterceptor());
 		factoryBean.getOutInterceptors().add(new LoggingOutInterceptor());

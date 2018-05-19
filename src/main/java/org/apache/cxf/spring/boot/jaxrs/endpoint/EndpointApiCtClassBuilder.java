@@ -195,7 +195,7 @@ public class EndpointApiCtClassBuilder implements Builder<CtClass> {
         EndpointApiUtils.methodBody(ctMethod, method);
         // 设置方法异常捕获逻辑
         EndpointApiUtils.methodBody(ctMethod, method);
-        // 为方法添加 @HttpMethod、 @GET、 @POST、 @PUT、 @DELETE、 @PATCH、 @HEAD、 @OPTIONS、@Path、、@Consumes、@RestBound、@RestParam 注解
+        // 为方法添加 @HttpMethod、 @GET、 @POST、 @PUT、 @DELETE、 @PATCH、 @HEAD、 @OPTIONS、@Path、、@Consumes、@Produces、@RestBound、@RestParam 注解
         EndpointApiUtils.methodAnnotations(ctMethod, constPool, method, bound, params);
         
         //新增方法

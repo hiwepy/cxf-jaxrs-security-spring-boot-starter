@@ -51,6 +51,20 @@ public class RestMethod {
 	private final String path;
 
 	/**
+	 * A list of media types. Each entry may specify a single type or consist of a
+	 * comma separated list of types, with any leading or trailing white-spaces in a
+	 * single type entry being ignored. For example:
+	 * 
+	 * <pre>
+	 * { "image/jpeg, image/gif ", " image/png" }
+	 * </pre>
+	 * 
+	 * Use of the comma-separated form allows definition of a common string constant
+	 * for use on multiple targets.
+	 */
+	private String[] mediaTypes = new String[] { "*/*" };
+	
+	/**
 	 * Defines the media types that the methods of a resource class or
 	 * {@link javax.ws.rs.ext.MessageBodyReader} can accept.
 	 * 
@@ -73,6 +87,14 @@ public class RestMethod {
 
 	public String[] getConsumes() {
 		return consumes;
+	}
+	
+	public String[] getMediaTypes() {
+		return mediaTypes;
+	}
+
+	public void setMediaTypes(String[] mediaTypes) {
+		this.mediaTypes = mediaTypes;
 	}
 
 	public void setConsumes(String[] consumes) {

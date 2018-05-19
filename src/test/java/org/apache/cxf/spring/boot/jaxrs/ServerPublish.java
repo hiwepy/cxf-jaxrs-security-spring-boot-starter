@@ -28,8 +28,8 @@ public class ServerPublish {
 		factoryBean.getOutInterceptors().add(new LoggingOutInterceptor());
 
 		factoryBean.setResourceClasses(CustomerServiceImpl.class, CustomerServiceImpl2.class, CustomerServiceImpl3.class);
-
-		factoryBean.setAddress("http://localhost:9000/ws/jaxrs");
+		//factoryBean.setPublishedEndpointUrl("http://localhost:9000");
+		factoryBean.setAddress("http://localhost:9000");
 		factoryBean.create();
 		
 		// jax-rs服务工厂
@@ -38,8 +38,9 @@ public class ServerPublish {
 		factoryBean2.getOutInterceptors().add(new LoggingOutInterceptor());
 	
 		factoryBean2.setResourceClasses(CustomerServiceImpl4.class);
-	
-		factoryBean2.setAddress("http://localhost:9000/ws/jaxrs4");
+		//factoryBean2.setPublishedEndpointUrl("http://localhost:8000");
+		
+		factoryBean2.setAddress("http://localhost:8000");
 		factoryBean2.create();
 
 		//

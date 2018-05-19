@@ -15,10 +15,16 @@
  */
 package org.apache.cxf.spring.boot;
 
+import java.util.Map;
+
 public class CxfJaxrsServerProperties {
 
 	private String address;
-
+	private String publishedEndpointUrl;
+	private Map<Object, Object> languageMappings;
+	private Map<Object, Object> extensionMappings;
+	private Map<String, Object> properties;
+	 
 	public String getAddress() {
 		return address;
 	}
@@ -27,5 +33,48 @@ public class CxfJaxrsServerProperties {
 		this.address = address;
 	}
 
+	public String getPublishedEndpointUrl() {
+		return publishedEndpointUrl;
+	}
+
+	public void setPublishedEndpointUrl(String publishedEndpointUrl) {
+		this.publishedEndpointUrl = publishedEndpointUrl;
+	}
+
+	/**
+	 * Sets the language mappings, example, 'en' is the key and 'en-gb' is the
+	 * value.
+	 *
+	 * @param lMaps the language mappings
+	 */
+	public void setLanguageMappings(Map<Object, Object> lMaps) {
+		languageMappings = lMaps;
+	}
+
+	public Map<Object, Object> getLanguageMappings() {
+		return languageMappings;
+	}
+	
+	/**
+	 * Sets the extension mappings, example, 'xml' is the key and 'text/xml' is the
+	 * value.
+	 *
+	 * @param extMaps  the extension mappings
+	 */
+	public void setExtensionMappings(Map<Object, Object> extMaps) {
+		extensionMappings = extMaps;
+	}
+
+	public Map<Object, Object> getExtensionMappings() {
+		return extensionMappings;
+	}
+
+	public Map<String, Object> getProperties() {
+		return properties;
+	}
+
+	public void setProperties(Map<String, Object> properties) {
+		this.properties = properties;
+	}
 	
 }

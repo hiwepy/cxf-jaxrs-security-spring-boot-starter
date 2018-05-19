@@ -24,8 +24,11 @@ import org.apache.cxf.endpoint.ServerImpl;
 import org.apache.cxf.ext.logging.LoggingFeature;
 import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
 import org.apache.cxf.metrics.MetricsFeature;
+import org.apache.cxf.spring.boot.CxfJaxrsServerProperties;
 import org.apache.cxf.spring.boot.jaxrs.callback.DefaultEndpointCallback;
 import org.apache.cxf.validation.BeanValidationFeature;
+
+import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 
 /**
  * TODO
@@ -39,9 +42,12 @@ public class EndpointApiTemplate {
 	private LoggingFeature loggingFeature;
 	private MetricsFeature metricsFeature;
 	private BeanValidationFeature validationFeature;
+	private CxfJaxrsServerProperties serverProperties;
+	
 
-	public EndpointApiTemplate(Bus bus) {
+	public EndpointApiTemplate(Bus bus, CxfJaxrsServerProperties serverProperties) {
 		this.bus = bus;
+		this.serverProperties = serverProperties;
 		this.callback = new DefaultEndpointCallback( loggingFeature, metricsFeature, validationFeature);
 	}
 
@@ -71,13 +77,20 @@ public class EndpointApiTemplate {
 		
 		// 2). 设置属性
 		factoryBean.setAddress(addr);
+		//factoryBean.setApplication(app);
 		factoryBean.setBindingId(DigestUtils.md5Hex(addr));
 		factoryBean.setBus(bus);
 		factoryBean.setServiceBeanObjects(implementors);
+		factoryBean.setExtensionMappings(serverProperties.getExtensionMappings());
+		factoryBean.setLanguageMappings(serverProperties.getLanguageMappings());;
+		factoryBean.setProperties(serverProperties.getProperties());
+		// 添加 Provider
+		factoryBean.setProvider(new JacksonJaxbJsonProvider());
+		factoryBean.setPublishedEndpointUrl(serverProperties.getPublishedEndpointUrl());
 		
 		// 3). 调用回调函数，个性化设置拦截器、Provider、Feature
 		callback.doCallback(factoryBean, implementors );
-
+		
 		// 4). 创建并发布服务，会发起一个http服务，默认使用Jetty
 		ServerImpl server = (ServerImpl) factoryBean.create();
 		
@@ -101,8 +114,15 @@ public class EndpointApiTemplate {
 		
 		// 2). 设置属性
 		factoryBean.setAddress(addr);
+		//factoryBean.setApplication(app);
 		factoryBean.setBindingId(DigestUtils.md5Hex(addr));
 		factoryBean.setBus(bus);
+		factoryBean.setExtensionMappings(serverProperties.getExtensionMappings());
+		factoryBean.setLanguageMappings(serverProperties.getLanguageMappings());
+		factoryBean.setProperties(serverProperties.getProperties());
+		// 添加 Provider
+		factoryBean.setProvider(new JacksonJaxbJsonProvider());
+		factoryBean.setPublishedEndpointUrl(serverProperties.getPublishedEndpointUrl());
 		factoryBean.setResourceClasses(classes);
 		
 		// 3). 调用回调函数，个性化设置拦截器、Provider、Feature

@@ -13,22 +13,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.apache.cxf.spring.boot.jaxrs;
+package org.apache.cxf.spring.boot.jaxrs.client;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.junit.Test;
-import org.springframework.http.HttpEntity;  
-  
   
 /** 
  * @author jingguoqiang 
  * @desc  org.apache.cxf jar包写的客户端 
  */  
-public class ClientFangWen {  
+public class CXFHttpClient {  
       
     /**  
     * @Description: 测试没有和spring集成的  
@@ -37,7 +36,8 @@ public class ClientFangWen {
     */   
     @Test  
     public void testClient1() {    
-        HttpClient httpclient = new DefaultHttpClient();    
+    	
+        HttpClient httpclient = HttpClientBuilder.create().build();    
         HttpGet httpget = new HttpGet("http://localhost:9000/ws/jaxrs/customer/1/info");  
         String result = null;  
         HttpResponse response = null;  
@@ -60,7 +60,7 @@ public class ClientFangWen {
     }  
     @Test  
     public void testClient2() {    
-        HttpClient httpclient = new DefaultHttpClient();    
+        HttpClient httpclient = HttpClientBuilder.create().build();    
         HttpGet httpget = new HttpGet("http://localhost:9000/ws/jaxrs/customer/search?name=damaha");  
         String result = null;  
         HttpResponse response = null;  

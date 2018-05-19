@@ -164,7 +164,7 @@ public class EndpointApiUtils {
 	}
 	
 	/**
-	 * 为方法添加 @HttpMethod、 @GET、 @POST、 @PUT、 @DELETE、 @PATCH、 @HEAD、 @OPTIONS、@Path、、@Consumes、@RestBound、@RestParam 注解
+	 * 为方法添加 @HttpMethod、 @GET、 @POST、 @PUT、 @DELETE、 @PATCH、 @HEAD、 @OPTIONS、@Path、、@Consumes、@Produces、@RestBound、@RestParam 注解
 	 * @author 		： <a href="https://github.com/vindell">vindell</a>
 	 * @param ctMethod
 	 * @param constPool
@@ -202,6 +202,11 @@ public class EndpointApiUtils {
 	        methodAttr.addAnnotation(EndpointApiUtils.annotConsumes(constPool, method.getConsumes()));
         }
         
+        // 添加 @Produces 注解
+        if (ArrayUtils.isNotEmpty(method.getMediaTypes())) {
+        	methodAttr.addAnnotation(EndpointApiUtils.annotProduces(constPool, method.getMediaTypes()));
+ 		}
+     		
         ctMethod.getMethodInfo().addAttribute(methodAttr);
         
         // 添加 @WebParam 参数注解

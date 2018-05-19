@@ -35,7 +35,7 @@ import org.apache.cxf.jaxrs.ext.DefaultMethod;
 
 @Path(value = "/customer")
 // @Produces("*/*")
-@Produces("application/xml")
+//@Produces("application/xml")
 // @Produces("application/json")
 public class CustomerServiceImpl4 {
 
@@ -49,6 +49,7 @@ public class CustomerServiceImpl4 {
 	@GET
 	@Path("/{id}/info")
 	@Consumes
+	@Produces("application/xml")
 	public Customer findCustomerById(@PathParam("id") @DefaultValue("ddd") String id) {
 		Customer customer = new Customer();
 		customer.setId(id);

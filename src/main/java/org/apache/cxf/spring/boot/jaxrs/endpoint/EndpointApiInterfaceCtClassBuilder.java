@@ -187,7 +187,7 @@ public class EndpointApiInterfaceCtClassBuilder implements Builder<CtClass> {
 			ctMethod = CtNewMethod.abstractMethod(returnType, method.getName(), null , exceptions, declaring);
 		}
 		
-		// 为方法添加 @HttpMethod、 @GET、 @POST、 @PUT、 @DELETE、 @PATCH、 @HEAD、 @OPTIONS、@Path、、@Consumes、@RestBound、@RestParam 注解
+		// 为方法添加 @HttpMethod、 @GET、 @POST、 @PUT、 @DELETE、 @PATCH、 @HEAD、 @OPTIONS、@Path、、@Consumes、@Produces、@RestBound、@RestParam 注解
         EndpointApiUtils.methodAnnotations(ctMethod, constPool, method, bound, params);
         
         //新增方法
