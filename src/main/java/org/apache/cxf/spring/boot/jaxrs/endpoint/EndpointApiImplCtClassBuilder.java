@@ -9,7 +9,7 @@ import org.apache.cxf.spring.boot.jaxrs.endpoint.ctweb.RestMethod;
 import org.apache.cxf.spring.boot.jaxrs.endpoint.ctweb.RestParam;
 import org.apache.cxf.spring.boot.jaxrs.utils.EndpointApiUtils;
 
-import com.github.vindell.javassist.utils.JavassistUtils;
+import com.github.vindell.javassist.utils.ClassPoolFactory;
 
 import javassist.CannotCompileException;
 import javassist.ClassPool;
@@ -34,7 +34,7 @@ public class EndpointApiImplCtClassBuilder extends EndpointApiCtClassBuilder imp
 	private EndpointApiInterfaceCtClassBuilder classBuilder;
 	
 	public EndpointApiImplCtClassBuilder(final String classname) throws CannotCompileException, NotFoundException  {
-		this(JavassistUtils.getDefaultPool(), classname);
+		this(ClassPoolFactory.getDefaultPool(), classname);
 	}
   
 	public EndpointApiImplCtClassBuilder(final ClassPool pool, final String classname) throws CannotCompileException, NotFoundException {

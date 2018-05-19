@@ -45,6 +45,9 @@ import org.apache.cxf.spring.boot.jaxrs.endpoint.ctweb.RestMethod;
 import org.apache.cxf.spring.boot.jaxrs.endpoint.ctweb.RestParam;
 import org.springframework.util.StringUtils;
 
+import com.github.vindell.javassist.bytecode.CtAnnotationBuilder;
+import com.github.vindell.javassist.utils.JavassistUtils;
+
 import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;
@@ -56,7 +59,6 @@ import javassist.bytecode.AnnotationsAttribute;
 import javassist.bytecode.ConstPool;
 import javassist.bytecode.ParameterAnnotationsAttribute;
 import javassist.bytecode.annotation.Annotation;
-import javassist.bytecode.annotation.ArrayMemberValue;
 import javassist.bytecode.annotation.StringMemberValue;
 
 public class EndpointApiUtils {
@@ -137,30 +139,20 @@ public class EndpointApiUtils {
 	 * 构造  @Path 注解
 	 */
 	public static Annotation annotPath(final ConstPool constPool, String path) {
-		
-		Annotation annot = new Annotation(Path.class.getName(), constPool);
-		annot.addMemberValue("value", new StringMemberValue(path, constPool));
-		
-		return annot;
+		return CtAnnotationBuilder.create(Path.class, constPool).addStringMember("value", path).build();
 	}
 	
 	/**
 	 * 构造  @Produces 注解
 	 */
 	public static Annotation annotProduces(final ConstPool constPool, String... mediaTypes) {
-
-		Annotation annot = new Annotation(Produces.class.getName(), constPool);
-		if(mediaTypes != null && mediaTypes.length > 0) {
-			ArrayMemberValue arr = new ArrayMemberValue(constPool);
-			StringMemberValue[] mediaMembers = new StringMemberValue[mediaTypes.length];
-			for (int i = 0; i < mediaMembers.length; i++) {
-				mediaMembers[i] = new StringMemberValue(mediaTypes[i], constPool);
-			}
-	        arr.setValue(mediaMembers);
-	        annot.addMemberValue("value", arr);
-		}
 		
-		return annot;
+		// 参数预处理
+		mediaTypes = ArrayUtils.isEmpty(mediaTypes) ? new String[] {"*/*"} : mediaTypes;
+		CtAnnotationBuilder builder = CtAnnotationBuilder.create(Produces.class, constPool).
+				addArrayMember("value", mediaTypes);
+		return builder.build();
+		 
 	}
 	
 	/**
@@ -184,7 +176,7 @@ public class EndpointApiUtils {
 	public static <T> void methodAnnotations(final CtMethod ctMethod, final ConstPool constPool, final RestMethod method, final RestBound bound, RestParam<?>... params) {
 		
 		// 添加方法注解
-        AnnotationsAttribute methodAttr = new AnnotationsAttribute(constPool, AnnotationsAttribute.visibleTag);
+		AnnotationsAttribute methodAttr = JavassistUtils.getAnnotationsAttribute(ctMethod);
        
         // 添加 @WebBound 注解
         if (bound != null) {
@@ -212,7 +204,7 @@ public class EndpointApiUtils {
         // 添加 @WebParam 参数注解
         if(params != null && params.length > 0) {
         	
-        	ParameterAnnotationsAttribute parameterAtrribute = new ParameterAnnotationsAttribute(constPool, ParameterAnnotationsAttribute.visibleTag);
+        	ParameterAnnotationsAttribute parameterAtrribute = JavassistUtils.getParameterAnnotationsAttribute(ctMethod);
             Annotation[][] paramArrays = EndpointApiUtils.annotParams(constPool, params);
             parameterAtrribute.setAnnotations(paramArrays);
             ctMethod.getMethodInfo().addAttribute(parameterAtrribute);
@@ -259,13 +251,13 @@ public class EndpointApiUtils {
 	 */
 	public static Annotation annotWebBound(final ConstPool constPool, final RestBound bound) {
 		
-		Annotation annot = new Annotation(WebBound.class.getName(), constPool);
-		annot.addMemberValue("uid", new StringMemberValue(bound.getUid(), constPool));
-        if (StringUtils.hasText(bound.getJson())) {
-        	annot.addMemberValue("json", new StringMemberValue(bound.getJson(), constPool));
+		CtAnnotationBuilder builder = CtAnnotationBuilder.create(WebBound.class, constPool).
+			addStringMember("uid", bound.getUid());
+		if (StringUtils.hasText(bound.getJson())) {
+			builder.addStringMember("json", bound.getJson());
         }
-        
-		return annot;
+		return builder.build();
+		
 	}
 	
 	/**
@@ -308,26 +300,11 @@ public class EndpointApiUtils {
 	 * 构造 @Consumes 注解
 	 */
 	public static <T> Annotation annotConsumes(final ConstPool constPool, String... consumes) {
-
-		Annotation annot = new Annotation(Consumes.class.getName(), constPool);
-		if (consumes != null && consumes.length > 0) {
-			ArrayMemberValue arr = new ArrayMemberValue(constPool);
-			StringMemberValue[] mediaMembers = new StringMemberValue[consumes.length];
-			for (int i = 0; i < mediaMembers.length; i++) {
-				mediaMembers[i] = new StringMemberValue(consumes[i], constPool);
-			}
-			arr.setValue(mediaMembers);
-			annot.addMemberValue("value", arr);
-		} else {
-
-			ArrayMemberValue arr = new ArrayMemberValue(constPool);
-			StringMemberValue[] mediaMembers = new StringMemberValue[] { new StringMemberValue("*/*", constPool) };
-			arr.setValue(mediaMembers);
-			annot.addMemberValue("value", arr);
-
-		}
-
-		return annot;
+		// 参数预处理
+		consumes = ArrayUtils.isEmpty(consumes) ? new String[] {"*/*"} : consumes;
+		CtAnnotationBuilder builder = CtAnnotationBuilder.create(Consumes.class, constPool).
+				addArrayMember("value", consumes);
+		return builder.build();
 	}
 	
 	/**
