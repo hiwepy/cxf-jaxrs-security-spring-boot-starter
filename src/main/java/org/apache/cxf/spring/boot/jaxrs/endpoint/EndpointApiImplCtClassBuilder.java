@@ -105,7 +105,7 @@ public class EndpointApiImplCtClassBuilder extends EndpointApiCtClassBuilder imp
         // 设置方法体
         EndpointApiUtils.methodBody(ctMethod, method);
         // 设置方法异常捕获逻辑
-        EndpointApiUtils.methodBody(ctMethod, method);
+        EndpointApiUtils.methodCatch(pool, ctMethod);
         
         //新增方法
         declaring.addMethod(ctMethod);
