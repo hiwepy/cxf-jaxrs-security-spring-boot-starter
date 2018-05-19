@@ -150,7 +150,7 @@ public class EndpointApiUtils {
 		// 参数预处理
 		mediaTypes = ArrayUtils.isEmpty(mediaTypes) ? new String[] {"*/*"} : mediaTypes;
 		CtAnnotationBuilder builder = CtAnnotationBuilder.create(Produces.class, constPool).
-				addArrayMember("value", mediaTypes);
+				addStringMember("value", mediaTypes);
 		return builder.build();
 		 
 	}
@@ -303,7 +303,7 @@ public class EndpointApiUtils {
 		// 参数预处理
 		consumes = ArrayUtils.isEmpty(consumes) ? new String[] {"*/*"} : consumes;
 		CtAnnotationBuilder builder = CtAnnotationBuilder.create(Consumes.class, constPool).
-				addArrayMember("value", consumes);
+				addStringMember("value", consumes);
 		return builder.build();
 	}
 	
