@@ -376,7 +376,7 @@
 		<maven-surefire-plugin.vertsion>2.21.0</maven-surefire-plugin.vertsion>
 		<maven-nexus-staging-plugin.version>1.6.8</maven-nexus-staging-plugin.version>
 		<jaxb.version>2.2.11</jaxb.version>
-		<javassist.version>3.22.0-GA</javassist.version>
+		<javassist.version>3.24.0-GA</javassist.version>
 	</properties>
 
 	<dependencies>
