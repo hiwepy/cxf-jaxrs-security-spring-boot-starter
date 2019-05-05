@@ -376,7 +376,8 @@
 		<maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
 		<maven-surefire-plugin.vertsion>2.22.1</maven-surefire-plugin.vertsion>
 		<maven-nexus-staging-plugin.version>1.6.8</maven-nexus-staging-plugin.version>
-		<jaxb.version>2.3.2</jaxb.version>
+		<jaxb-core.version>2.3.0.1</jaxb-core.version>
+		<jaxb-impl.version>2.3.2</jaxb-impl.version>
 		<javassist.version>3.24.0-GA</javassist.version>
 	</properties>
 
@@ -488,12 +489,12 @@
 		<dependency>
 			<groupId>com.sun.xml.bind</groupId>
 			<artifactId>jaxb-core</artifactId>
-			<version>${jaxb.version}</version>
+			<version>${jaxb-core.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.sun.xml.bind</groupId>
 			<artifactId>jaxb-impl</artifactId>
-			<version>${jaxb.version}</version>
+			<version>${jaxb-impl.version}</version>
 		</dependency>
 		<!-- cxf-validator -->
 		<dependency>
