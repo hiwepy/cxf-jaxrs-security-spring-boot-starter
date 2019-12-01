@@ -2,7 +2,7 @@ package org.apache.cxf.rs.security.oauth2.grants.code;
 
 import org.apache.cxf.Bus;
 
-public class EHCacheCodeDataProvider extends DefaultEHCacheCodeDataProvider {
+public class EHCacheCodeDataProvider extends DefaultEncryptingCodeDataProvider {
 
 	public EHCacheCodeDataProvider() {
 		super();
