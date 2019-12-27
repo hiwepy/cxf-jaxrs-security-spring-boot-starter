@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, vindell (https://github.com/vindell).
+ * Copyright (c) 2018, hiwepy (https://github.com/hiwepy).
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,7 +32,7 @@ import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 
 /**
  * TODO
- * @author ： <a href="https://github.com/vindell">vindell</a>
+ * @author ： <a href="https://github.com/hiwepy">hiwepy</a>
  */
 public class EndpointApiTemplate {
 	
@@ -53,7 +53,7 @@ public class EndpointApiTemplate {
 
 	/**
 	 * 为指定的addr发布Endpoint
-	 * @author ： <a href="https://github.com/vindell">vindell</a>
+	 * @author ： <a href="https://github.com/hiwepy">hiwepy</a>
 	 * @param addr
 	 * @param implementors
 	 * @return
@@ -64,7 +64,7 @@ public class EndpointApiTemplate {
 
 	/**
 	 * 为指定的addr发布Endpoint
-	 * @author 		： <a href="https://github.com/vindell">vindell</a>
+	 * @author 		： <a href="https://github.com/hiwepy">hiwepy</a>
 	 * @param addr
 	 * @param implementor
 	 * @param callback
@@ -101,7 +101,7 @@ public class EndpointApiTemplate {
 	
 	/**
 	 * 为指定的addr发布Endpoint
-	 * @author 		： <a href="https://github.com/vindell">vindell</a>
+	 * @author 		： <a href="https://github.com/hiwepy">hiwepy</a>
 	 * @param addr
 	 * @param callback
 	 * @param classes
@@ -138,7 +138,7 @@ public class EndpointApiTemplate {
 
 	/**
 	 * 销毁指定路径匹配的Endpoint
-	 * @author ： <a href="https://github.com/vindell">vindell</a>
+	 * @author ： <a href="https://github.com/hiwepy">hiwepy</a>
 	 * @param addr
 	 */
 	public void destroy(String addr) {
