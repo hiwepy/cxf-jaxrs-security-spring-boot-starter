@@ -368,7 +368,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<commons-io.version>2.5</commons-io.version>
 		<cxf.version>3.3.1</cxf.version>
-		<cxf-rt-javassist.version>1.0.2.RELEASE</cxf-rt-javassist.version>
+		<cxf-rt-javassist.version>1.0.3.RELEASE</cxf-rt-javassist.version>
 		<maven.version>3.0</maven.version>
 		<maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
 		<maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
@@ -511,10 +511,10 @@
 			<artifactId>javax.el-api</artifactId>
 			<version>3.0.1-b04</version>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.glassfish</groupId>
 			<artifactId>javax.el</artifactId>
-		</dependency>
+		</dependency> -->
 		<!-- cxf-rt-rs -->
 		<dependency>
 			<groupId>org.apache.cxf</groupId>
