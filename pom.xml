@@ -428,6 +428,8 @@
         <jaxb-core.version>2.3.0.1</jaxb-core.version>
         <jaxb-impl.version>2.3.2</jaxb-impl.version>
         <javassist.version>3.24.0-GA</javassist.version>
+                <hibernate-validator.version>8.0.4.Final</hibernate-validator.version>
+                <javax.el-api.version>3.0.1-b04</javax.el-api.version>
     </properties>
 
     <dependencies>
@@ -563,7 +565,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>6.0.9.Final</version>
+            <version>${hibernate-validator.version}</version>
         </dependency>
         <!-- For Validation Api -->
         <dependency>
@@ -574,7 +576,7 @@
         <dependency>
             <groupId>javax.el</groupId>
             <artifactId>javax.el-api</artifactId>
-            <version>3.0.1-b04</version>
+            <version>${javax.el-api.version}</version>
         </dependency>
         <!-- <dependency>
             <groupId>org.glassfish</groupId>
@@ -764,5 +766,21 @@
 
 
     </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-validator</artifactId>
+                <version>${hibernate-validator.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.el</groupId>
+                <artifactId>javax.el-api</artifactId>
+                <version>${javax.el-api.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
 
 </project>
