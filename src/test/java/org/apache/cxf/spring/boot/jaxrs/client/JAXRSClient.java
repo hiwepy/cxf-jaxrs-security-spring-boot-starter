@@ -17,7 +17,7 @@ package org.apache.cxf.spring.boot.jaxrs.client;
 
 /**
  * TODO
- * @author 		： <a href="https://github.com/hiwepy">hiwepy</a>
+ * @author [@Loong Wan](https://github.com/loong10k)
  */
 
 import java.util.ArrayList;
