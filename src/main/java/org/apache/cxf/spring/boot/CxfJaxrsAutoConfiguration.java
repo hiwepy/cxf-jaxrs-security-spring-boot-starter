@@ -3,15 +3,11 @@ package org.apache.cxf.spring.boot;
 import org.apache.cxf.Bus;
 import org.apache.cxf.BusFactory;
 import org.apache.cxf.bus.spring.SpringBus;
-import org.apache.cxf.ext.logging.LoggingFeature;
+import org.apache.cxf.feature.LoggingFeature;
 import org.apache.cxf.jaxrs.validation.ValidationExceptionMapper;
 import org.apache.cxf.metrics.MetricsFeature;
 import org.apache.cxf.metrics.MetricsProvider;
 import org.apache.cxf.metrics.codahale.CodahaleMetricsProvider;
-import org.apache.cxf.rs.security.oauth2.grants.code.EHCacheCodeDataProvider;
-import org.apache.cxf.rs.security.oauth2.provider.DefaultEHCacheOAuthDataProvider;
-import org.apache.cxf.rs.security.oauth2.provider.OAuthDataProvider;
-import org.apache.cxf.rs.security.oauth2.services.AccessTokenService;
 import org.apache.cxf.spring.boot.endpoint.APIEndpointRepository;
 import org.apache.cxf.spring.boot.jaxrs.endpoint.EndpointApiTemplate;
 import org.apache.cxf.spring.boot.property.LoggingFeatureProperty;
@@ -48,74 +44,87 @@ public class CxfJaxrsAutoConfiguration implements ApplicationContextAware {
 	private ApplicationContext applicationContext;
 
 	@Autowired
-	private Bus bus;
-	@Autowired
 	private APIEndpointRepository endpointRepository;
 
 	@Bean
+	@ConditionalOnMissingBean
+	public ValidationExceptionMapper validationExceptionMapper() {
+		return new ValidationExceptionMapper();
+	}
+
+	/**
+	 * Creates the CXF bus.
+	 * @return the Spring bus
+	 */
+	@Bean(name = Bus.DEFAULT_BUS_ID)
 	@ConditionalOnMissingBean(Bus.class)
-	public Bus bus() {
+	public SpringBus springBus() {
 		SpringBus bus = new SpringBus();
 		BusFactory.setDefaultBus(bus);
 		return bus;
 	}
 
-	@Bean
-	@ConditionalOnMissingBean(BeanValidationProvider.class)
-	/** Creates a validation provider bean.
-	 * @return the result
+	/**
+	 * Creates a logging feature from the bound properties.
+	 * @param properties the CXF properties
+	 * @return the logging feature
 	 */
+	@Bean
+	@ConditionalOnMissingBean
+	public LoggingFeature loggingFeature(CxfJaxrsProperties properties) {
+		LoggingFeature feature = new LoggingFeature();
+		LoggingFeatureProperty logging = properties.getLoggingFeature();
+		if (logging != null) {
+			feature.setLimit(logging.getLimit());
+			feature.setPrettyLogging(logging.isPrettyLogging());
+		}
+		return feature;
+	}
+
+	/**
+	 * Creates a metrics feature using Codahale/Dropwizard metrics.
+	 * @param bus the CXF bus
+	 * @return the metrics feature
+	 */
+	@Bean
+	@ConditionalOnMissingBean
+	public MetricsFeature metricsFeature(Bus bus) {
+		return new MetricsFeature(MetricsProvider.class.cast(new CodahaleMetricsProvider(bus)));
+	}
+
+	/**
+	 * Creates a bean validation feature.
+	 * @return the bean validation feature
+	 */
+	@Bean
+	@ConditionalOnMissingBean
+	public BeanValidationFeature validationFeature() {
+		return new BeanValidationFeature();
+	}
+
+	/**
+	 * Creates a bean validation provider.
+	 * @return the bean validation provider
+	 */
+	@Bean
+	@ConditionalOnMissingBean
 	public BeanValidationProvider validationProvider() {
 		return new BeanValidationProvider();
 	}
 
-	@Bean
-	public BeanValidationFeature validationFeature(BeanValidationProvider validationProvider) {
-		BeanValidationFeature feature = new BeanValidationFeature();
-		feature.setProvider(validationProvider);
-		return feature;
-	}
-
-	@Bean
-	public ValidationExceptionMapper exceptionMapper() {
-		return new ValidationExceptionMapper();
-	}
-
-	@Bean
-	public LoggingFeature loggingFeature(CxfJaxrsProperties properties) {
-		
-		LoggingFeatureProperty property = properties.getLoggingFeature();
-
-		LoggingFeature feature = new LoggingFeature();
-		feature.setInMemThreshold(property.getThreshold());
-		feature.setLimit(property.getLimit());
-		feature.setLogBinary(property.isLogBinary());
-		feature.setLogMultipart(property.isLogMultipart());
-		feature.setPrettyLogging(property.isPrettyLogging());
-		feature.setVerbose(property.isVerbose());
-		
-		return feature;
-	}
-	
-	@Bean
-	@ConditionalOnMissingBean(MetricsProvider.class)
-	/** Creates a metrics provider bean.
-	 * @param bus the bus
-	 * @return the result
+	/**
+	 * Creates an endpoint API template for publishing JAX-RS endpoints.
+	 * @param bus the CXF bus
+	 * @param loggingFeature the logging feature
+	 * @param metricsFeature the metrics feature
+	 * @param validationFeature the validation feature
+	 * @param properties the CXF properties
+	 * @return the endpoint API template
 	 */
-	public MetricsProvider metricsProvider(Bus bus) {
-		return new CodahaleMetricsProvider(bus);
-	}
-
 	@Bean
-	public MetricsFeature metricsFeature(MetricsProvider metricsProvider) {
-		return new MetricsFeature(metricsProvider);
-	}
-	
-	@Bean
-	public EndpointApiTemplate endpointTemplate(Bus bus,
-			LoggingFeature loggingFeature,
-			MetricsFeature metricsFeature,
+	@ConditionalOnMissingBean
+	public EndpointApiTemplate endpointApiTemplate(Bus bus,
+			LoggingFeature loggingFeature, MetricsFeature metricsFeature,
 			BeanValidationFeature validationFeature,
 			CxfJaxrsProperties properties) {
 		
@@ -126,55 +135,6 @@ public class CxfJaxrsAutoConfiguration implements ApplicationContextAware {
 		template.setValidationFeature(validationFeature);
 		
 		return template;
-	}
-	
-	
-
-	/**
-	 * EventDisruptor 。 RingBuffer processing。
-	 * （：，，retrieve ，processing，）
-	 */
-	@Bean
-	@ConditionalOnMissingBean
-	public DefaultEHCacheOAuthDataProvider oauthProvider() {
-
-		/*
-		 * <bean id="oauthProvider" class=
-		 * "org.apache.cxf.systest.jaxrs.security.oauth2.common.OAuthDataProviderImpl">
-		 *        <property name="useJwtFormatForAccessTokens" value="true"/>
-		 *        <property name="storeJwtTokenKeyOnly" value="true"/> </bean>
-		 */
-		/*
-		 * <bean id="oauthProvider" class=
-		 * "org.apache.cxf.rs.security.oauth2.grants.code.EHCacheCodeDataProvider">
-		 *        <property name="useJwtFormatForAccessTokens" value="true"/> </bean>
-		 */
-
-		DefaultEHCacheOAuthDataProvider dataProvider = new EHCacheCodeDataProvider();
-
-		dataProvider.setUseJwtFormatForAccessTokens(true);
-
-		return dataProvider;
-	}
-
-	@Bean
-	@ConditionalOnMissingBean
-	public AccessTokenService accessTokenService(OAuthDataProvider dataProvider) {
-		/*
-		 * <bean id="oauthProvider" class="oauth2.manager.OAuthManager"/>
-		 * 
-		 * <bean id="accessTokenService"
-		 * class="org.apache.cxf.rs.security.oauth2.services.AccessTokenService">
-		 * <property name="dataProvider" ref="oauthProvider"/> <property
-		 * name="writeCustomErrors" value="true"/> </bean>
-		 */
-
-		AccessTokenService accessTokenService = new AccessTokenService();
-
-		accessTokenService.setDataProvider(dataProvider);
-		accessTokenService.setWriteCustomErrors(true);
-
-		return accessTokenService;
 	}
 
 	@Override
@@ -197,13 +157,6 @@ public class CxfJaxrsAutoConfiguration implements ApplicationContextAware {
 	 */
 	public APIEndpointRepository getEndpointRepository() {
 		return endpointRepository;
-	}
-
-	/** Sets the endpoint repository.
-	 * @param endpointRepository the endpointRepository
-	 */
-	public void setEndpointRepository(APIEndpointRepository endpointRepository) {
-		this.endpointRepository = endpointRepository;
 	}
 
 }

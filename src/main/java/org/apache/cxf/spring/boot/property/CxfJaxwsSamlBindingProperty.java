@@ -14,8 +14,6 @@
  * the License.
  */
 package org.apache.cxf.spring.boot.property;
-
-import org.apache.cxf.rs.security.saml.sso.SSOConstants;
 /** The Cxf Jaxws Saml Binding Property.
  *
  * @author [@Loong Wan](https://github.com/loong10k)
@@ -23,6 +21,8 @@ import org.apache.cxf.rs.security.saml.sso.SSOConstants;
  */
 
 public class CxfJaxwsSamlBindingProperty {
+
+	private static final long DEFAULT_STATE_TIME = 300000L; // 5 minutes
 
 	private boolean addEndpointAddressToContext;
 	private boolean addWebAppContext = true;
@@ -32,7 +32,7 @@ public class CxfJaxwsSamlBindingProperty {
 	 */
 	private String assertionConsumerServiceAddress;
 	
-	private long stateTimeToLive = SSOConstants.DEFAULT_STATE_TIME;
+	private long stateTimeToLive = DEFAULT_STATE_TIME;
 	private String signaturePropertiesFile;
 	private String callbackHandlerClass;
 	private String signatureUsername;

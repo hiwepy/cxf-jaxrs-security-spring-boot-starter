@@ -14,8 +14,6 @@
  * the License.
  */
 package org.apache.cxf.spring.boot.property;
-
-import org.apache.cxf.ext.logging.AbstractLoggingInterceptor;
 /** The Logging Feature Property.
  *
  * @author [@Loong Wan](https://github.com/loong10k)
@@ -24,8 +22,11 @@ import org.apache.cxf.ext.logging.AbstractLoggingInterceptor;
 
 public class LoggingFeatureProperty {
 
-	private int limit = AbstractLoggingInterceptor.DEFAULT_LIMIT;
-	private long threshold = AbstractLoggingInterceptor.DEFAULT_THRESHOLD;
+	private static final int DEFAULT_LIMIT = 1024 * 1024; // 1MB
+	private static final long DEFAULT_THRESHOLD = 0L;
+
+	private int limit = DEFAULT_LIMIT;
+	private long threshold = DEFAULT_THRESHOLD;
 	/**
 	 * Whether Log binary content
 	 */

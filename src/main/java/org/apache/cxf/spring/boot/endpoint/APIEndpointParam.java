@@ -1,6 +1,6 @@
 package org.apache.cxf.spring.boot.endpoint;
 
-import javax.jws.WebParam.Mode;
+import jakarta.jws.WebParam.Mode;
 /** The A P I Endpoint Param.
  *
  * @author [@Loong Wan](https://github.com/loong10k)
@@ -42,7 +42,7 @@ public class APIEndpointParam {
 	 *	WebParam.Mode.OUT and WebParam.Mode.INOUT RPC Web Service or 。
 	 * 
 	 */
-	private Mode mode = javax.jws.WebParam.Mode.IN;
+	private Mode mode = jakarta.jws.WebParam.Mode.IN;
 	
 	/**
 	 * in SOAP 。， SOAP 。 true and false。 false。
