@@ -36,6 +36,11 @@ import org.springframework.context.annotation.Configuration;
 @AutoConfigureAfter( name = {
 	"org.apache.cxf.spring.boot.autoconfigure.CxfAutoConfiguration"
 })
+/** Configuration for Cxf Jaxrs Saml.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
+ */
 @Configuration
 @ConditionalOnWebApplication
 @ConditionalOnClass({ SpringBus.class, CXFServlet.class })
@@ -187,10 +192,16 @@ public class CxfJaxrsSamlConfiguration implements ApplicationContextAware {
 	}
 	
 	@Override
+	/** Sets the application context.
+	 * @param applicationContext the applicationContext
+	 */
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		this.applicationContext = applicationContext;
 	}
 
+	/** Returns the application context.
+	 * @return the result
+	 */
 	public ApplicationContext getApplicationContext() {
 		return applicationContext;
 	}

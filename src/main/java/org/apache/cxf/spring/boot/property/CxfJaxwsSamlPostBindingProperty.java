@@ -14,15 +14,26 @@
  * the License.
  */
 package org.apache.cxf.spring.boot.property;
+/** The Cxf Jaxws Saml Post Binding Property.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
+ */
 
 public class CxfJaxwsSamlPostBindingProperty extends CxfJaxwsSamlBindingProperty {
 
 	private boolean useDeflateEncoding;
 
+	/** Returns whether the use deflate encoding is enabled.
+	 * @return the result
+	 */
 	public boolean isUseDeflateEncoding() {
 		return useDeflateEncoding;
 	}
 
+	/** Sets the use deflate encoding.
+	 * @param useDeflateEncoding the useDeflateEncoding
+	 */
 	public void setUseDeflateEncoding(boolean useDeflateEncoding) {
 		this.useDeflateEncoding = useDeflateEncoding;
 	}

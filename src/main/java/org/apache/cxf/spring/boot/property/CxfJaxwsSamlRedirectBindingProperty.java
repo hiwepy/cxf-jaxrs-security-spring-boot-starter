@@ -14,6 +14,11 @@
  * the License.
  */
 package org.apache.cxf.spring.boot.property;
+/** The Cxf Jaxws Saml Redirect Binding Property.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
+ */
 
 public class CxfJaxwsSamlRedirectBindingProperty extends CxfJaxwsSamlBindingProperty {
 

@@ -14,15 +14,26 @@
  * the License.
  */
 package org.apache.cxf.spring.boot.property;
+/** The Cxf Jaxws Saml E H Cache Property.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
+ */
 
 public class CxfJaxwsSamlEHCacheProperty {
 
 	private String configFileUrl = "/cxf-samlp-ehcache.xml";
 
+	/** Returns the config file url.
+	 * @return the result
+	 */
 	public String getConfigFileUrl() {
 		return configFileUrl;
 	}
 
+	/** Sets the config file url.
+	 * @param configFileUrl the configFileUrl
+	 */
 	public void setConfigFileUrl(String configFileUrl) {
 		this.configFileUrl = configFileUrl;
 	}

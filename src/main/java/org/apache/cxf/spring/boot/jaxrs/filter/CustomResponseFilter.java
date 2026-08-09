@@ -22,6 +22,11 @@ import javax.ws.rs.container.ContainerResponseFilter;
 import org.apache.cxf.jaxrs.model.OperationResourceInfo;
 import org.apache.cxf.jaxrs.utils.JAXRSUtils;
 import org.apache.cxf.message.Message;
+/** Filter for Custom Response.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
+ */
 
 public class CustomResponseFilter implements ContainerResponseFilter {
 	

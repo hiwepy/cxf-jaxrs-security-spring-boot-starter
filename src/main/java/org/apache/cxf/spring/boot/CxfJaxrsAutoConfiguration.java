@@ -32,6 +32,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 //http://cxf.apache.org/docs/springboot.html
+/** Auto-configuration for Cxf Jaxrs.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
+ */
 @AutoConfigureAfter(name = { "org.apache.cxf.spring.boot.autoconfigure.CxfAutoConfiguration" })
 @Configuration
 @ConditionalOnWebApplication
@@ -57,6 +62,9 @@ public class CxfJaxrsAutoConfiguration implements ApplicationContextAware {
 
 	@Bean
 	@ConditionalOnMissingBean(BeanValidationProvider.class)
+	/** Creates a validation provider bean.
+	 * @return the result
+	 */
 	public BeanValidationProvider validationProvider() {
 		return new BeanValidationProvider();
 	}
@@ -91,6 +99,10 @@ public class CxfJaxrsAutoConfiguration implements ApplicationContextAware {
 	
 	@Bean
 	@ConditionalOnMissingBean(MetricsProvider.class)
+	/** Creates a metrics provider bean.
+	 * @param bus the bus
+	 * @return the result
+	 */
 	public MetricsProvider metricsProvider(Bus bus) {
 		return new CodahaleMetricsProvider(bus);
 	}
@@ -119,8 +131,8 @@ public class CxfJaxrsAutoConfiguration implements ApplicationContextAware {
 	
 
 	/**
-	 * 决定一个消费者将如何等待生产者将Event置入Disruptor的策略。用来权衡当生产者无法将新的事件放进RingBuffer时的处理策略。
-	 * （例如：当生产者太快，消费者太慢，会导致生成者获取不到新的事件槽来插入新事件，则会根据该策略进行处理，默认会堵塞）
+	 * EventDisruptor 。 RingBuffer processing。
+	 * （：，，retrieve ，processing，）
 	 */
 	@Bean
 	@ConditionalOnMissingBean
@@ -166,18 +178,30 @@ public class CxfJaxrsAutoConfiguration implements ApplicationContextAware {
 	}
 
 	@Override
+	/** Sets the application context.
+	 * @param applicationContext the applicationContext
+	 */
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		this.applicationContext = applicationContext;
 	}
 
+	/** Returns the application context.
+	 * @return the result
+	 */
 	public ApplicationContext getApplicationContext() {
 		return applicationContext;
 	}
 
+	/** Returns the endpoint repository.
+	 * @return the result
+	 */
 	public APIEndpointRepository getEndpointRepository() {
 		return endpointRepository;
 	}
 
+	/** Sets the endpoint repository.
+	 * @param endpointRepository the endpointRepository
+	 */
 	public void setEndpointRepository(APIEndpointRepository endpointRepository) {
 		this.endpointRepository = endpointRepository;
 	}

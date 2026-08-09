@@ -9,11 +9,21 @@ import org.apache.cxf.spring.boot.property.CxfJaxwsSamlPostBindingProperty;
 import org.apache.cxf.spring.boot.property.CxfJaxwsSamlRedirectBindingProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
+/** Configuration properties for Cxf Jaxrs Saml.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
+ */
 
 @ConfigurationProperties(CxfJaxrsSamlProperties.PREFIX)
 public class CxfJaxrsSamlProperties {
 
 	public static final String PREFIX = "cxf.jaxws.saml";
+	/** The Scope.
+	 *
+	 * @author [@Loong Wan](https://github.com/loong10k)
+	 * @since 1.0.0
+	 */
 
 	public enum Scope {
 
@@ -29,10 +39,18 @@ public class CxfJaxrsSamlProperties {
 			return this.scope;
 		}
 
+		/** Indicates whether some other object is equal to this one.
+		 * @param scope the scope
+		 * @return the result
+		 */
 		public boolean equals(Scope scope) {
 			return this.compareTo(scope) == 0;
 		}
 
+		/** Indicates whether some other object is equal to this one.
+		 * @param scope the scope
+		 * @return the result
+		 */
 		public boolean equals(String scope) {
 			return this.compareTo(Scope.valueOfIgnoreCase(scope)) == 0;
 		}
@@ -68,42 +86,72 @@ public class CxfJaxrsSamlProperties {
 	private CxfJaxwsSamlEHCacheProperty ehcache = new CxfJaxwsSamlEHCacheProperty();
 	
 
+	/** Returns whether the enabled is enabled.
+	 * @return the result
+	 */
 	public boolean isEnabled() {
 		return enabled;
 	}
 
+	/** Sets the enabled.
+	 * @param enabled the enabled
+	 */
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
 
+	/** Returns the dispatcher.
+	 * @return the result
+	 */
 	public CxfJaxwsSamlDispatcherProperty getDispatcher() {
 		return dispatcher;
 	}
 
+	/** Sets the dispatcher.
+	 * @param dispatcher the dispatcher
+	 */
 	public void setDispatcher(CxfJaxwsSamlDispatcherProperty dispatcher) {
 		this.dispatcher = dispatcher;
 	}
 
+	/** Returns the post binding.
+	 * @return the result
+	 */
 	public CxfJaxwsSamlPostBindingProperty getPostBinding() {
 		return postBinding;
 	}
 
+	/** Sets the post binding.
+	 * @param postBinding the postBinding
+	 */
 	public void setPostBinding(CxfJaxwsSamlPostBindingProperty postBinding) {
 		this.postBinding = postBinding;
 	}
 
+	/** Returns the redirect binding.
+	 * @return the result
+	 */
 	public CxfJaxwsSamlRedirectBindingProperty getRedirectBinding() {
 		return redirectBinding;
 	}
 
+	/** Sets the redirect binding.
+	 * @param redirectBinding the redirectBinding
+	 */
 	public void setRedirectBinding(CxfJaxwsSamlRedirectBindingProperty redirectBinding) {
 		this.redirectBinding = redirectBinding;
 	}
 
+	/** Returns the ehcache.
+	 * @return the result
+	 */
 	public CxfJaxwsSamlEHCacheProperty getEhcache() {
 		return ehcache;
 	}
 
+	/** Sets the ehcache.
+	 * @param ehcache the ehcache
+	 */
 	public void setEhcache(CxfJaxwsSamlEHCacheProperty ehcache) {
 		this.ehcache = ehcache;
 	}

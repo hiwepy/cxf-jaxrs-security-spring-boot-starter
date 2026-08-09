@@ -13,10 +13,19 @@ import org.apache.cxf.rs.security.oauth2.grants.code.ServerAuthorizationCodeGran
 import org.apache.cxf.rs.security.oauth2.provider.OAuthServiceException;
 import org.apache.cxf.rs.security.oauth2.tokens.bearer.BearerAccessToken;
 import org.apache.cxf.rs.security.oauth2.tokens.refresh.RefreshToken;
+/** The Bearer O Auth Data Provider.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
+ */
  
 public class BearerOAuthDataProvider implements AuthorizationCodeDataProvider {
 
 	@Override
+	/** Returns the client.
+	 * @param clientId the clientId
+	 * @return the result
+	 */
 	public Client getClient(String clientId) throws OAuthServiceException {
 		// TODO Auto-generated method stub
 		return null;
@@ -38,12 +47,23 @@ public class BearerOAuthDataProvider implements AuthorizationCodeDataProvider {
    }
 
 	@Override
+	/** Returns the access token.
+	 * @param accessToken the accessToken
+	 * @return the result
+	 */
 	public ServerAccessToken getAccessToken(String accessToken) throws OAuthServiceException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
+	/** Returns the preauthorized token.
+	 * @param client the client
+	 * @param requestedScopes the requestedScopes
+	 * @param subject the subject
+	 * @param grantType the grantType
+	 * @return the result
+	 */
 	public ServerAccessToken getPreauthorizedToken(Client client, List<String> requestedScopes, UserSubject subject,
 			String grantType) throws OAuthServiceException {
 		// TODO Auto-generated method stub
@@ -58,12 +78,22 @@ public class BearerOAuthDataProvider implements AuthorizationCodeDataProvider {
 	}
 
 	@Override
+	/** Returns the access tokens.
+	 * @param client the client
+	 * @param subject the subject
+	 * @return the result
+	 */
 	public List<ServerAccessToken> getAccessTokens(Client client, UserSubject subject) throws OAuthServiceException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
+	/** Returns the refresh tokens.
+	 * @param client the client
+	 * @param subject the subject
+	 * @return the result
+	 */
 	public List<RefreshToken> getRefreshTokens(Client client, UserSubject subject) throws OAuthServiceException {
 		// TODO Auto-generated method stub
 		return null;
@@ -95,6 +125,11 @@ public class BearerOAuthDataProvider implements AuthorizationCodeDataProvider {
 	}
 
 	@Override
+	/** Returns the code grants.
+	 * @param c the c
+	 * @param subject the subject
+	 * @return the result
+	 */
 	public List<ServerAuthorizationCodeGrant> getCodeGrants(Client c, UserSubject subject)
 			throws OAuthServiceException {
 		// TODO Auto-generated method stub

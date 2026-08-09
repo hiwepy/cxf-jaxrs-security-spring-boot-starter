@@ -1,85 +1,120 @@
 package org.apache.cxf.spring.boot.endpoint;
 
 import javax.jws.WebParam.Mode;
+/** The A P I Endpoint Param.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
+ */
 
 public class APIEndpointParam {
 
 	// javax.jws.WebParam
 
 	/**
-	 * WSDL 文件中参数的名称。
-	 * 对于 RPC 样式的 Web Service，该名称映射到表示该参数的 <wsdl:part> 元素。
-	 * 对于文档样式的 Web Service，该名称为表示该参数的 XML 元素的本地名称。
-	 * 默认值为该方法的参数的名称。
+	 * WSDL 。
+	 * RPC Web Service， <wsdl:part> 。
+	 * Web Service， XML 。
+	 * 。
 	 */
 	private String name;
 
 	private String partName;
 
 	/**
-	 * 该参数的 XML 名称空间。此值仅用于文档样式的 Web Service，其中该参数映射到 XML 元素。 默认值为该 Web Service 的 targetNamespace。 
+	 * XML 。used for Web Service， XML 。 Web Service targetNamespace。
 	 */
 	private String targetNamespace;
 
 	/**
-	 * 该参数的流方向。
+	 * 。
      *
-	 * 有效值为：
+	 * ：
 	 *	
 	 *	    § WebParam.Mode.IN
 	 *	    WebParam.Mode.OUT
 	 *	    WebParam.Mode.INOUT
 	 *	
-	 *	默认值为 WebParam.Mode.IN。
+	 *	WebParam.Mode.IN。
 	 *	
-	 *	如果指定 WebParam.Mode.OUT 或 WebParam.Mode.INOUT，则该参数的数据类型必须为 Holder 或扩展 Holder。有关详细信息，请参阅 JAX-RPC   specification。
+	 *	WebParam.Mode.OUT or WebParam.Mode.INOUT， Holder or Holder。information， JAX-RPC specification。
 	 *	
-	 *	WebParam.Mode.OUT 和 WebParam.Mode.INOUT 模式仅对于 RPC 样式的 Web Service 或映射到头的参数受支持。 
+	 *	WebParam.Mode.OUT and WebParam.Mode.INOUT RPC Web Service or 。
 	 * 
 	 */
 	private Mode mode = javax.jws.WebParam.Mode.IN;
 	
 	/**
-	 * 指定该参数的值是否存在于 SOAP 头中。默认情况下，参数位于 SOAP 正文中。有效值为 true 和 false。默认值为 false。 
+	 * in SOAP 。， SOAP 。 true and false。 false。
 	 */
 	private boolean header;
 
+	/** Returns the name.
+	 * @return the result
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/** Sets the name.
+	 * @param name the name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	/** Returns the part name.
+	 * @return the result
+	 */
 	public String getPartName() {
 		return partName;
 	}
 
+	/** Sets the part name.
+	 * @param partName the partName
+	 */
 	public void setPartName(String partName) {
 		this.partName = partName;
 	}
 
+	/** Returns the target namespace.
+	 * @return the result
+	 */
 	public String getTargetNamespace() {
 		return targetNamespace;
 	}
 
+	/** Sets the target namespace.
+	 * @param targetNamespace the targetNamespace
+	 */
 	public void setTargetNamespace(String targetNamespace) {
 		this.targetNamespace = targetNamespace;
 	}
 
+	/** Returns the mode.
+	 * @return the result
+	 */
 	public Mode getMode() {
 		return mode;
 	}
 
+	/** Sets the mode.
+	 * @param mode the mode
+	 */
 	public void setMode(Mode mode) {
 		this.mode = mode;
 	}
 
+	/** Returns whether the header is enabled.
+	 * @return the result
+	 */
 	public boolean isHeader() {
 		return header;
 	}
 
+	/** Sets the header.
+	 * @param header the header
+	 */
 	public void setHeader(boolean header) {
 		this.header = header;
 	}

@@ -16,6 +16,11 @@
 package org.apache.cxf.spring.boot;
 
 import java.util.Map;
+/** Configuration properties for Cxf Jaxrs Server.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
+ */
 
 public class CxfJaxrsServerProperties {
 
@@ -25,18 +30,30 @@ public class CxfJaxrsServerProperties {
 	private Map<Object, Object> extensionMappings;
 	private Map<String, Object> properties;
 	 
+	/** Returns the address.
+	 * @return the result
+	 */
 	public String getAddress() {
 		return address;
 	}
 
+	/** Sets the address.
+	 * @param address the address
+	 */
 	public void setAddress(String address) {
 		this.address = address;
 	}
 
+	/** Returns the published endpoint url.
+	 * @return the result
+	 */
 	public String getPublishedEndpointUrl() {
 		return publishedEndpointUrl;
 	}
 
+	/** Sets the published endpoint url.
+	 * @param publishedEndpointUrl the publishedEndpointUrl
+	 */
 	public void setPublishedEndpointUrl(String publishedEndpointUrl) {
 		this.publishedEndpointUrl = publishedEndpointUrl;
 	}
@@ -51,6 +68,9 @@ public class CxfJaxrsServerProperties {
 		languageMappings = lMaps;
 	}
 
+	/** Returns the language mappings.
+	 * @return the result
+	 */
 	public Map<Object, Object> getLanguageMappings() {
 		return languageMappings;
 	}
@@ -65,14 +85,23 @@ public class CxfJaxrsServerProperties {
 		extensionMappings = extMaps;
 	}
 
+	/** Returns the extension mappings.
+	 * @return the result
+	 */
 	public Map<Object, Object> getExtensionMappings() {
 		return extensionMappings;
 	}
 
+	/** Returns the properties.
+	 * @return the result
+	 */
 	public Map<String, Object> getProperties() {
 		return properties;
 	}
 
+	/** Sets the properties.
+	 * @param properties the properties
+	 */
 	public void setProperties(Map<String, Object> properties) {
 		this.properties = properties;
 	}

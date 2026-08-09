@@ -1,54 +1,83 @@
 package org.apache.cxf.spring.boot.endpoint;
+/** The A P I Endpoint Result.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
+ */
 
 public class APIEndpointResult {
 
 	// javax.jws.WebResult
 
 	/**
-	 * WSDL 文件中参数的名称。
-	 * 对于 RPC 样式的 Web Service，该名称映射到表示返回值的 <wsdl:part> 元素。对于文档样式的 Web Service，该名称为表示返回值的 XML 元素的本地名称。
-	 * 默认值为硬编码名称 result。 
+	 * WSDL 。
+	 * RPC Web Service， <wsdl:part> 。 Web Service， XML 。
+	 * result。
 	 */
 	private String name;
 
 	private String partName;
 	
 	/**
-	 * 返回值的 XML 名称空间。此值仅用于文档样式的 Web Service，其中返回值映射到 XML 元素。
-	 * 默认值为该 Web Service 的 targetNamespace。 
+	 * XML 。used for Web Service， XML 。
+	 * Web Service targetNamespace。
 	 */
 	private String targetNamespace;
 
 	private boolean header;
 
+	/** Returns the name.
+	 * @return the result
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/** Sets the name.
+	 * @param name the name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	/** Returns the part name.
+	 * @return the result
+	 */
 	public String getPartName() {
 		return partName;
 	}
 
+	/** Sets the part name.
+	 * @param partName the partName
+	 */
 	public void setPartName(String partName) {
 		this.partName = partName;
 	}
 
+	/** Returns the target namespace.
+	 * @return the result
+	 */
 	public String getTargetNamespace() {
 		return targetNamespace;
 	}
 
+	/** Sets the target namespace.
+	 * @param targetNamespace the targetNamespace
+	 */
 	public void setTargetNamespace(String targetNamespace) {
 		this.targetNamespace = targetNamespace;
 	}
 
+	/** Returns whether the header is enabled.
+	 * @return the result
+	 */
 	public boolean isHeader() {
 		return header;
 	}
 
+	/** Sets the header.
+	 * @param header the header
+	 */
 	public void setHeader(boolean header) {
 		this.header = header;
 	}

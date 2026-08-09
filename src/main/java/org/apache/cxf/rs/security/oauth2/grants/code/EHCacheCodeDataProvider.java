@@ -1,6 +1,11 @@
 package org.apache.cxf.rs.security.oauth2.grants.code;
 
 import org.apache.cxf.Bus;
+/** The E H Cache Code Data Provider.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
+ */
 
 public class EHCacheCodeDataProvider extends DefaultEncryptingCodeDataProvider {
 

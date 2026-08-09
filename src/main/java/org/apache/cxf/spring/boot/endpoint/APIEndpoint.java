@@ -11,35 +11,35 @@ public class APIEndpoint implements Serializable {
 	// javax.jws.WebService
 
 	/**
-	 * Web Service 的名称。映射到 WSDL 文件中的 <wsdl:portType> 元素。默认值为 JWS 文件中 Java 类的非限定名称。 
+	 * Web Service 。 WSDL <wsdl:portType> 。 JWS Java 。
 	 */
 	private String name;
 
 	/**
-	 * 用于从此 Web Service 生成的 WSDL 和 XML 元素的 XML 名称空间。默认值由 JAX-RPC specification 指定。 
+	 * used for Web Service WSDL and XML XML 。 JAX-RPC specification 。
 	 */
 	private String targetNamespace;
 
 	/**
-	 * Web Service 的服务名。映射到 WSDL 文件中的 <wsdl:service> 元素。默认值为 JWS 文件中 Java 类的非限定名称，后面加上字符串 Service。 
+	 * Web Service service。 WSDL <wsdl:service> 。 JWS Java ， Service。
 	 */
 	private String serviceName;
 
 	private String portName;
 
 	/**
-	 * 预定义 WSDL 文件的相对或绝对 URL。如果指定此特性，则当 JWS 文件与 WSDL 文件中的端口类型和绑定不一致时，jwsc Ant 任务不生成 WSDL 文件，并且会返回错误。
-	 * 注意：wsdlc Ant 任务从 WSDL 生成端点接口 JWS 文件时使用此特性。通常情况下，用户在其自己的 JWS 文件中永远不会使用该特性。
+	 * WSDL or URL。， JWS WSDL andbinding，jwsc Ant WSDL ，。
+	 * ：wsdlc Ant WSDL JWS 。，userin JWS 。
 	 */
 	private String wsdlLocation;
 	
 	/**
-	 * 现有服务端点接口文件的完全限定名称。如果指定此特性，则假设您已经创建了该端点接口文件，并且该文件位于 CLASSPATH 中。 
+	 * service 。，， CLASSPATH 。
 	 */
 	private String endpointInterface;
 
 	/**
-	 * Web Service 服务对外暴露地址
+	 * Web Service service
 	 */
 	private String addr;
 
@@ -47,66 +47,114 @@ public class APIEndpoint implements Serializable {
 
 	private APIEndpointMethod[] methods;
 	
+	/** Returns the name.
+	 * @return the result
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/** Sets the name.
+	 * @param name the name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	/** Returns the target namespace.
+	 * @return the result
+	 */
 	public String getTargetNamespace() {
 		return targetNamespace;
 	}
 
+	/** Sets the target namespace.
+	 * @param targetNamespace the targetNamespace
+	 */
 	public void setTargetNamespace(String targetNamespace) {
 		this.targetNamespace = targetNamespace;
 	}
 
+	/** Returns the service name.
+	 * @return the result
+	 */
 	public String getServiceName() {
 		return serviceName;
 	}
 
+	/** Sets the service name.
+	 * @param serviceName the serviceName
+	 */
 	public void setServiceName(String serviceName) {
 		this.serviceName = serviceName;
 	}
 
+	/** Returns the port name.
+	 * @return the result
+	 */
 	public String getPortName() {
 		return portName;
 	}
 
+	/** Sets the port name.
+	 * @param portName the portName
+	 */
 	public void setPortName(String portName) {
 		this.portName = portName;
 	}
 
+	/** Returns the wsdl location.
+	 * @return the result
+	 */
 	public String getWsdlLocation() {
 		return wsdlLocation;
 	}
 
+	/** Sets the wsdl location.
+	 * @param wsdlLocation the wsdlLocation
+	 */
 	public void setWsdlLocation(String wsdlLocation) {
 		this.wsdlLocation = wsdlLocation;
 	}
 
+	/** Returns the endpoint interface.
+	 * @return the result
+	 */
 	public String getEndpointInterface() {
 		return endpointInterface;
 	}
 
+	/** Sets the endpoint interface.
+	 * @param endpointInterface the endpointInterface
+	 */
 	public void setEndpointInterface(String endpointInterface) {
 		this.endpointInterface = endpointInterface;
 	}
 
+	/** Returns the addr.
+	 * @return the result
+	 */
 	public String getAddr() {
 		return addr;
 	}
 
+	/** Sets the addr.
+	 * @param addr the addr
+	 */
 	public void setAddr(String addr) {
 		this.addr = addr;
 	}
 
+	/** Returns the methods.
+	 * @return the result
+	 */
 	public APIEndpointMethod[] getMethods() {
 		return methods;
 	}
 
+	/** Sets the methods.
+	 * @param methods the methods
+	 */
 	public void setMethods(APIEndpointMethod... methods) {
 		this.methods = methods;
 	}

@@ -52,7 +52,7 @@ public class EndpointApiTemplate {
 	}
 
 	/**
-	 * 为指定的addr发布Endpoint
+	 * addrEndpoint
 	 * @author [@Loong Wan](https://github.com/loong10k)
 	 * @param addr
 	 * @param implementors
@@ -63,7 +63,7 @@ public class EndpointApiTemplate {
 	}
 
 	/**
-	 * 为指定的addr发布Endpoint
+	 * addrEndpoint
 	 * @author [@Loong Wan](https://github.com/loong10k)
 	 * @param addr
 	 * @param implementor
@@ -100,7 +100,7 @@ public class EndpointApiTemplate {
 	}
 	
 	/**
-	 * 为指定的addr发布Endpoint
+	 * addrEndpoint
 	 * @author [@Loong Wan](https://github.com/loong10k)
 	 * @param addr
 	 * @param callback
@@ -137,7 +137,7 @@ public class EndpointApiTemplate {
 	}
 
 	/**
-	 * 销毁指定路径匹配的Endpoint
+	 * Endpoint
 	 * @author [@Loong Wan](https://github.com/loong10k)
 	 * @param addr
 	 */
@@ -148,34 +148,58 @@ public class EndpointApiTemplate {
 		}
 	}
 
+	/** Returns the bus.
+	 * @return the result
+	 */
 	public Bus getBus() {
 		return bus;
 	}
 
+	/** Sets the bus.
+	 * @param bus the bus
+	 */
 	public void setBus(Bus bus) {
 		this.bus = bus;
 	}
 
+	/** Returns the logging feature.
+	 * @return the result
+	 */
 	public LoggingFeature getLoggingFeature() {
 		return loggingFeature;
 	}
 
+	/** Sets the logging feature.
+	 * @param loggingFeature the loggingFeature
+	 */
 	public void setLoggingFeature(LoggingFeature loggingFeature) {
 		this.loggingFeature = loggingFeature;
 	}
 
+	/** Returns the metrics feature.
+	 * @return the result
+	 */
 	public MetricsFeature getMetricsFeature() {
 		return metricsFeature;
 	}
 
+	/** Sets the metrics feature.
+	 * @param metricsFeature the metricsFeature
+	 */
 	public void setMetricsFeature(MetricsFeature metricsFeature) {
 		this.metricsFeature = metricsFeature;
 	}
 
+	/** Returns the validation feature.
+	 * @return the result
+	 */
 	public BeanValidationFeature getValidationFeature() {
 		return validationFeature;
 	}
 
+	/** Sets the validation feature.
+	 * @param validationFeature the validationFeature
+	 */
 	public void setValidationFeature(BeanValidationFeature validationFeature) {
 		this.validationFeature = validationFeature;
 	}

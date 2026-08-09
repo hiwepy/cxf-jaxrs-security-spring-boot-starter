@@ -1,15 +1,20 @@
 package org.apache.cxf.spring.boot.endpoint;
+/** The A P I Endpoint Method.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
+ */
 
 public class APIEndpointMethod {
 
 	// javax.jws.WebMethod
 	
 	/**
-	 * 操作的名称。映射到 WSDL 文件中的 <wsdl:operation> 元素。默认值为该方法的名称。 
+	 * 。 WSDL <wsdl:operation> 。 。
 	 */
 	private String operationName;
 	/**
-	 * 此操作的操作。对于 SOAP 绑定，此特性的值决定 SOAP 消息中 SOAPAction 头的值。
+	 * 。 SOAP binding， SOAP SOAPAction 。
 	 */
 	private String action;
 	private boolean exclude;
@@ -21,42 +26,72 @@ public class APIEndpointMethod {
 	
 	private APIEndpointResult result;
 
+	/** Returns the operation name.
+	 * @return the result
+	 */
 	public String getOperationName() {
 		return operationName;
 	}
 
+	/** Sets the operation name.
+	 * @param operationName the operationName
+	 */
 	public void setOperationName(String operationName) {
 		this.operationName = operationName;
 	}
 
+	/** Returns the action.
+	 * @return the result
+	 */
 	public String getAction() {
 		return action;
 	}
 
+	/** Sets the action.
+	 * @param action the action
+	 */
 	public void setAction(String action) {
 		this.action = action;
 	}
 
+	/** Returns whether the exclude is enabled.
+	 * @return the result
+	 */
 	public boolean isExclude() {
 		return exclude;
 	}
 
+	/** Sets the exclude.
+	 * @param exclude the exclude
+	 */
 	public void setExclude(boolean exclude) {
 		this.exclude = exclude;
 	}
 
+	/** Returns the params.
+	 * @return the result
+	 */
 	public APIEndpointParam[] getParams() {
 		return params;
 	}
 
+	/** Sets the params.
+	 * @param params the params
+	 */
 	public void setParams(APIEndpointParam... params) {
 		this.params = params;
 	}
 
+	/** Returns the result.
+	 * @return the result
+	 */
 	public APIEndpointResult getResult() {
 		return result;
 	}
 
+	/** Sets the result.
+	 * @param result the result
+	 */
 	public void setResult(APIEndpointResult result) {
 		this.result = result;
 	}
