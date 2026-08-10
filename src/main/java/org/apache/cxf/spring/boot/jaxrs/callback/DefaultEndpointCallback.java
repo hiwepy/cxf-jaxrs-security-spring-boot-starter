@@ -31,7 +31,7 @@ import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 
 /**
  * TODO
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  */
 public class DefaultEndpointCallback implements EndpointCallback {
 
@@ -67,7 +67,7 @@ public class DefaultEndpointCallback implements EndpointCallback {
 
 	/**
 	 * TODO
-	 * @author [@Loong Wan](https://github.com/loong10k)
+	 * @author <a href="https://github.com/loong10k">Loong Wan</a>
 	 * @param endpointFactory
 	 * @param classes
 	 */

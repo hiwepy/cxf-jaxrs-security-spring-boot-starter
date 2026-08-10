@@ -2,7 +2,7 @@ package org.apache.cxf.rs.security.oauth2.grants.code;
 
 /** The E H Cache Code Data Provider.
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 

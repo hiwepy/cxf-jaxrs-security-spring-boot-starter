@@ -1,7 +1,7 @@
 package org.apache.cxf.spring.boot.endpoint;
 /** The A P I Endpoint Result.
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 

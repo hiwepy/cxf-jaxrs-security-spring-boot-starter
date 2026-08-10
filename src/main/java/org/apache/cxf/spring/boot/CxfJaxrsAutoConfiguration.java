@@ -30,7 +30,7 @@ import org.springframework.context.annotation.Configuration;
 //http://cxf.apache.org/docs/springboot.html
 /** Auto-configuration for Cxf Jaxrs.
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 @AutoConfigureAfter(name = { "org.apache.cxf.spring.boot.autoconfigure.CxfAutoConfiguration" })

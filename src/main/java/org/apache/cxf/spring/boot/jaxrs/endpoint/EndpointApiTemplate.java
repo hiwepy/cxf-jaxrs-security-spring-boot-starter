@@ -32,7 +32,7 @@ import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 
 /**
  * TODO
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  */
 public class EndpointApiTemplate {
 	
@@ -53,7 +53,7 @@ public class EndpointApiTemplate {
 
 	/**
 	 * addrEndpoint
-	 * @author [@Loong Wan](https://github.com/loong10k)
+	 * @author <a href="https://github.com/loong10k">Loong Wan</a>
 	 * @param addr
 	 * @param implementors
 	 * @return
@@ -64,7 +64,7 @@ public class EndpointApiTemplate {
 
 	/**
 	 * addrEndpoint
-	 * @author [@Loong Wan](https://github.com/loong10k)
+	 * @author <a href="https://github.com/loong10k">Loong Wan</a>
 	 * @param addr
 	 * @param implementor
 	 * @param callback
@@ -101,7 +101,7 @@ public class EndpointApiTemplate {
 	
 	/**
 	 * addrEndpoint
-	 * @author [@Loong Wan](https://github.com/loong10k)
+	 * @author <a href="https://github.com/loong10k">Loong Wan</a>
 	 * @param addr
 	 * @param callback
 	 * @param classes
@@ -138,7 +138,7 @@ public class EndpointApiTemplate {
 
 	/**
 	 * Endpoint
-	 * @author [@Loong Wan](https://github.com/loong10k)
+	 * @author <a href="https://github.com/loong10k">Loong Wan</a>
 	 * @param addr
 	 */
 	public void destroy(String addr) {
