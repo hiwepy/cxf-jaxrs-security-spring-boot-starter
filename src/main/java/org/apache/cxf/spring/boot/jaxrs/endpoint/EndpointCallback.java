@@ -20,14 +20,14 @@ import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
 
 /**
  * TODO
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  */
 public interface EndpointCallback {
 
 	/**
 	 * 
 	 * TODO
-	 * @author [@Loong Wan](https://github.com/loong10k)
+	 * @author <a href="https://github.com/loong10k">Loong Wan</a>
 	 * @param implementor
 	 * @param endpointFactory
 	 * @return
