@@ -20,6 +20,12 @@ import java.util.Map;
 /*
  * http://cxf.apache.org/docs/swagger2feature.html
  */
+/**
+ * <p>Swagger2FeatureProperty class.</p>
+ *
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
+ * @since 1.0.0
+ */
 public class Swagger2FeatureProperty {
 
 	private static final String DEFAULT_LICENSE_VALUE = "Apache 2.0 License";

@@ -13,6 +13,8 @@ import jakarta.ws.rs.core.MultivaluedMap;
  * from other origins. You may omit using this filter or use CXF's advanced CORS filter
  * org.apache.cxf.rs.security.cors.CrossOriginResourceSharingFilter
  * included in cxf-rt-rs-security-cors if you need a more comprehensive accessibility rules.
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
+ * @since 1.0.0
  */
 public class ApiOriginFilter implements ContainerResponseFilter {
 
