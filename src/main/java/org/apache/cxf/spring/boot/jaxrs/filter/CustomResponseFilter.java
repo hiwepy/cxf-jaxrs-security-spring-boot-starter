@@ -30,6 +30,11 @@ import org.apache.cxf.message.Message;
 
 public class CustomResponseFilter implements ContainerResponseFilter {
 	
+	/**
+	 * <p>Filter.</p>
+	 * @param inContext
+	 * @param outContext
+	 */
 	public void filter(ContainerRequestContext inContext, ContainerResponseContext outContext) {
 		
 		Message message = JAXRSUtils.getCurrentMessage();

@@ -39,6 +39,11 @@ import org.springframework.context.annotation.Configuration;
 @ConditionalOnClass({ SpringBus.class, CXFServlet.class })
 @ConditionalOnProperty(prefix = CxfJaxrsProperties.PREFIX, value = "enabled", havingValue = "true")
 @EnableConfigurationProperties({ CxfJaxrsProperties.class })
+/**
+ * <p>Auto-configuration for CxfJaxrsAutoConfiguration.</p>
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
+ * @since 1.0.0
+ */
 public class CxfJaxrsAutoConfiguration implements ApplicationContextAware {
 
 	private ApplicationContext applicationContext;
@@ -48,6 +53,10 @@ public class CxfJaxrsAutoConfiguration implements ApplicationContextAware {
 
 	@Bean
 	@ConditionalOnMissingBean
+	/**
+	 * <p>Validation exception mapper.</p>
+	 * @return the result
+	 */
 	public ValidationExceptionMapper validationExceptionMapper() {
 		return new ValidationExceptionMapper();
 	}
@@ -58,6 +67,10 @@ public class CxfJaxrsAutoConfiguration implements ApplicationContextAware {
 	 */
 	@Bean(name = Bus.DEFAULT_BUS_ID)
 	@ConditionalOnMissingBean(Bus.class)
+	/**
+	 * <p>Spring bus.</p>
+	 * @return the result
+	 */
 	public SpringBus springBus() {
 		SpringBus bus = new SpringBus();
 		BusFactory.setDefaultBus(bus);
@@ -71,6 +84,11 @@ public class CxfJaxrsAutoConfiguration implements ApplicationContextAware {
 	 */
 	@Bean
 	@ConditionalOnMissingBean
+	/**
+	 * <p>Logging feature.</p>
+	 * @param properties
+	 * @return the result
+	 */
 	public LoggingFeature loggingFeature(CxfJaxrsProperties properties) {
 		LoggingFeature feature = new LoggingFeature();
 		LoggingFeatureProperty logging = properties.getLoggingFeature();
@@ -88,6 +106,11 @@ public class CxfJaxrsAutoConfiguration implements ApplicationContextAware {
 	 */
 	@Bean
 	@ConditionalOnMissingBean
+	/**
+	 * <p>Metrics feature.</p>
+	 * @param bus
+	 * @return the result
+	 */
 	public MetricsFeature metricsFeature(Bus bus) {
 		return new MetricsFeature(MetricsProvider.class.cast(new CodahaleMetricsProvider(bus)));
 	}
@@ -98,6 +121,10 @@ public class CxfJaxrsAutoConfiguration implements ApplicationContextAware {
 	 */
 	@Bean
 	@ConditionalOnMissingBean
+	/**
+	 * <p>Validation feature.</p>
+	 * @return the result
+	 */
 	public BeanValidationFeature validationFeature() {
 		return new BeanValidationFeature();
 	}
@@ -108,6 +135,10 @@ public class CxfJaxrsAutoConfiguration implements ApplicationContextAware {
 	 */
 	@Bean
 	@ConditionalOnMissingBean
+	/**
+	 * <p>Validation provider.</p>
+	 * @return the result
+	 */
 	public BeanValidationProvider validationProvider() {
 		return new BeanValidationProvider();
 	}

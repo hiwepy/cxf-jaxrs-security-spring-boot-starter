@@ -30,6 +30,10 @@ import org.apache.cxf.message.Message;
 
 
 public class CustomRequestFilter implements ContainerRequestFilter {
+    /**
+     * <p>Filter.</p>
+     * @param context
+     */
     public void filter(ContainerRequestContext context) {
         Message message = JAXRSUtils.getCurrentMessage();
        ClassResourceInfo cri = message.getExchange().get(OperationResourceInfo.class).getClassResourceInfo();

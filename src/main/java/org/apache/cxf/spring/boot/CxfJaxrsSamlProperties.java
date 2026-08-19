@@ -16,6 +16,11 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
  */
 
 @ConfigurationProperties(CxfJaxrsSamlProperties.PREFIX)
+/**
+ * <p>Auto-configuration for CxfJaxrsSamlProperties.</p>
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
+ * @since 1.0.0
+ */
 public class CxfJaxrsSamlProperties {
 
 	public static final String PREFIX = "cxf.jaxws.saml";
@@ -35,6 +40,10 @@ public class CxfJaxrsSamlProperties {
 			this.scope = scope;
 		}
 
+		/**
+		 * <p>Get.</p>
+		 * @return the result
+		 */
 		public String get() {
 			return this.scope;
 		}
@@ -55,6 +64,11 @@ public class CxfJaxrsSamlProperties {
 			return this.compareTo(Scope.valueOfIgnoreCase(scope)) == 0;
 		}
 
+		/**
+		 * <p>Value of ignore case.</p>
+		 * @param key
+		 * @return the result
+		 */
 		public static Scope valueOfIgnoreCase(String key) {
 			for (Scope scope : Scope.values()) {
 				if (scope.get() == key) {

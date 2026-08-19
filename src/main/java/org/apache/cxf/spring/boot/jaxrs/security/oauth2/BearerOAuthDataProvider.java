@@ -32,6 +32,11 @@ public class BearerOAuthDataProvider implements AuthorizationCodeDataProvider {
 	}
 
 	@Override
+	/**
+	 * <p>Create access token.</p>
+	 * @param reg
+	 * @return the result
+	 */
 	public ServerAccessToken createAccessToken(AccessTokenRegistration reg)
         throws OAuthServiceException {
  
@@ -71,6 +76,13 @@ public class BearerOAuthDataProvider implements AuthorizationCodeDataProvider {
 	}
 
 	@Override
+	/**
+	 * <p>Refresh access token.</p>
+	 * @param client
+	 * @param refreshToken
+	 * @param requestedScopes
+	 * @return the result
+	 */
 	public ServerAccessToken refreshAccessToken(Client client, String refreshToken, List<String> requestedScopes)
 			throws OAuthServiceException {
 		// TODO Auto-generated method stub
@@ -100,18 +112,35 @@ public class BearerOAuthDataProvider implements AuthorizationCodeDataProvider {
 	}
 
 	@Override
+	/**
+	 * <p>Revoke token.</p>
+	 * @param client
+	 * @param tokenId
+	 * @param tokenTypeHint
+	 */
 	public void revokeToken(Client client, String tokenId, String tokenTypeHint) throws OAuthServiceException {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
+	/**
+	 * <p>Convert scope to permissions.</p>
+	 * @param client
+	 * @param requestedScopes
+	 * @return the result
+	 */
 	public List<OAuthPermission> convertScopeToPermissions(Client client, List<String> requestedScopes) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
+	/**
+	 * <p>Create code grant.</p>
+	 * @param reg
+	 * @return the result
+	 */
 	public ServerAuthorizationCodeGrant createCodeGrant(AuthorizationCodeRegistration reg)
 			throws OAuthServiceException {
 		// TODO Auto-generated method stub
@@ -119,6 +148,11 @@ public class BearerOAuthDataProvider implements AuthorizationCodeDataProvider {
 	}
 
 	@Override
+	/**
+	 * <p>Remove code grant.</p>
+	 * @param code
+	 * @return the result
+	 */
 	public ServerAuthorizationCodeGrant removeCodeGrant(String code) throws OAuthServiceException {
 		// TODO Auto-generated method stub
 		return null;

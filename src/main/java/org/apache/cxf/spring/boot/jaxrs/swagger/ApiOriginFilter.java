@@ -17,6 +17,11 @@ import jakarta.ws.rs.core.MultivaluedMap;
 public class ApiOriginFilter implements ContainerResponseFilter {
 
     @Override
+    /**
+     * <p>Filter.</p>
+     * @param requestContext
+     * @param responseContext
+     */
     public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext)
         throws IOException {
         MultivaluedMap<String, Object> headers = responseContext.getHeaders();

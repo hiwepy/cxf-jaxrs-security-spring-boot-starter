@@ -29,12 +29,18 @@ import org.springframework.context.annotation.Configuration;
 @ConditionalOnClass({ SpringBus.class, CXFServlet.class })
 @ConditionalOnProperty(prefix = CxfJaxrsSamlProperties.PREFIX, value = "enabled", havingValue = "true")
 @EnableConfigurationProperties({ CxfJaxrsSamlProperties.class })
+/**
+ * <p>Auto-configuration for CxfJaxrsSamlConfiguration.</p>
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
+ * @since 1.0.0
+ */
 public class CxfJaxrsSamlConfiguration implements ApplicationContextAware {
 
 	private static final Logger LOG = LoggerFactory.getLogger(CxfJaxrsSamlConfiguration.class);
 	private ApplicationContext applicationContext;
 
 	@Override
+	/** @param applicationContext set the application context. */
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		this.applicationContext = applicationContext;
 		LOG.warn("CXF JAX-RS SAML configuration is present but SAML dependencies are not available on the classpath. "

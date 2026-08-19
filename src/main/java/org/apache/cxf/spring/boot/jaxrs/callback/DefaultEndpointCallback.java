@@ -47,6 +47,11 @@ public class DefaultEndpointCallback implements EndpointCallback {
 	}
 
 	@Override
+	/**
+	 * <p>Do callback.</p>
+	 * @param factoryBean
+	 * @param implementors
+	 */
 	public void doCallback(JAXRSServerFactoryBean factoryBean, Object... implementors ) {
 
 		// 3). 添加 Provider，用于支持自动解析各种数据格式、如Json
@@ -73,6 +78,11 @@ public class DefaultEndpointCallback implements EndpointCallback {
 	 */
 	
 	@Override
+	/**
+	 * <p>Do callback.</p>
+	 * @param factoryBean
+	 * @param classes
+	 */
 	public void doCallback(JAXRSServerFactoryBean factoryBean, Class<?>... classes) {
 
 		// 3). 添加 Provider，用于支持自动解析各种数据格式、如Json

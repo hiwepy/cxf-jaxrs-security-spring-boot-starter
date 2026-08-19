@@ -6,6 +6,11 @@ import java.io.Serializable;
  * http://www.cnblogs.com/wanggd/archive/2013/04/19/3030480.html
  */
 @SuppressWarnings("serial")
+/**
+ * <p>Auto-configuration for APIEndpoint.</p>
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
+ * @since 1.0.0
+ */
 public class APIEndpoint implements Serializable {
 
 	// javax.jws.WebService
